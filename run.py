@@ -5,8 +5,6 @@ from news_website.users.routes import loginPage, registrationPage, profilePage, 
 
 app = create_app()
 migrate = Migrate(app, db)
-# with app.app_context():
-#     db.create_all()
 
 # urls for home
 app.add_url_rule('/', view_func=homePage.as_view('home'))
@@ -19,7 +17,6 @@ app.add_url_rule('/profile/<int:user_id>', view_func=profilePage.as_view('profil
 app.add_url_rule('/logout', view_func=logout.as_view('logout'))
 app.add_url_rule('/reset_password', view_func=resetPasswordRequest.as_view('reset_password_request'))
 app.add_url_rule('/reset_password/<token>', view_func=resetToken.as_view('reset_token'))
-
 
 
 if __name__ == '__main__':
