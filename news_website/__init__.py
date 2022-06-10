@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from news_website.config import Config
@@ -5,6 +8,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 
+load_dotenv()
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -17,6 +21,7 @@ mail = Mail()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
