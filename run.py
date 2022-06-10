@@ -5,8 +5,8 @@ from news_website.users.routes import loginPage, registrationPage, profilePage, 
 
 app = create_app()
 migrate = Migrate(app, db)
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 # urls for home
 app.add_url_rule('/', view_func=homePage.as_view('home'))
