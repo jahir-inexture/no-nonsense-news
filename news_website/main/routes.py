@@ -3,6 +3,7 @@ from flask.views import MethodView
 
 main = Blueprint("main", __name__)
 
+
 class homePage(MethodView):
     """Class for getting the home page for the website"""
 
