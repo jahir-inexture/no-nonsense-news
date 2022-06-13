@@ -10,6 +10,8 @@ users = Blueprint("users", __name__)
 
 
 class loginPage(MethodView):
+    """class for login page to get the login page and posting the data of the user for login"""
+
     def get(self):
         if current_user.is_authenticated:
             return redirect(url_for('home_page'))
@@ -29,6 +31,7 @@ class loginPage(MethodView):
 
 
 class registrationPage(MethodView):
+    """class for getting registration page and posting the data of the user after registration"""
 
     def get(self):
         if current_user.is_authenticated:
@@ -52,6 +55,8 @@ class registrationPage(MethodView):
 
 
 class profilePage(MethodView):
+    """class for getting the profile page of the user"""
+
     decorators = [login_required]
 
     def get(self, user_id):
@@ -63,12 +68,16 @@ class profilePage(MethodView):
 
 
 class logout(MethodView):
+    """class for user logout"""
+
     def get(self):
         logout_user()
         return redirect(url_for('home_page'))
 
 
 class resetPasswordRequest(MethodView):
+    """class for getting the home page if user is already logged in and posting the data of password reset request form"""
+
     def get(self):
         if current_user.is_authenticated:
             return redirect(url_for('home_page'))
@@ -85,6 +94,7 @@ class resetPasswordRequest(MethodView):
 
 
 class resetToken(MethodView):
+    """class for getting the home page if the user is already logged in and posting the data of the user after the password reset"""
 
     def get(self, token):
         if current_user.is_authenticated:

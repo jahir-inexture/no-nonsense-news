@@ -11,6 +11,8 @@ def load_user(user_id):
 
 
 class userType(db.Model):
+    """model for storing different types of user along with their ids"""
+
     __tablename__ = "user_type"
     user_type_id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
@@ -18,6 +20,8 @@ class userType(db.Model):
 
 
 class User(db.Model, UserMixin):
+    """model for storing user information and user id"""
+
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(20), nullable=False)
@@ -32,11 +36,15 @@ class User(db.Model, UserMixin):
     user_type_id = db.Column(db.Integer, db.ForeignKey('user_type.user_type_id'))
 
     def get_reset_token(self, expires_sec=1800):
+        """function to get the reset token which will expire in 30 minutes"""
+
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
+        """function for verifying the reset token"""
+
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']

@@ -10,5 +10,7 @@ main = Blueprint("main", __name__)
 #     return render_template('home.html')
 
 class homePage(MethodView):
+    """Class for getting the home page for the website"""
+
     def get(self):
         return render_template('home.html')

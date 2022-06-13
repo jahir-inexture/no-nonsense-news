@@ -13,13 +13,18 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
+    <title>No Nonsense News</title>
+    <link rel="icon" type="image/svg" href="../static/images/newspaper-solid.svg">
+
 </head>
 <body>
 <header class="site-header">
     {#    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">#}
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container">
-            <a class="navbar-brand mr-4" href="/">No Nonsense News</a>
+            <a class="navbar-brand mr-4" href="/"><span class="material-icons main-icon">
+newspaper
+</span>No Nonsense News</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
