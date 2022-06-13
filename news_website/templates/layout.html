@@ -21,7 +21,7 @@
 <header class="site-header">
     {#    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">#}
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand mr-4" href="/"><span class="material-icons main-icon">
 newspaper
 </span>No Nonsense News</a>
@@ -52,14 +52,15 @@ account_circle
 logout
 </span>Logout</a>
                     {% else %}
-                        <a class="nav-item nav-link" href="{{ url_for('login_page') }}"><span
-                                class="material-icons nav-icon">
-login
-</span>Login</a>
+
                         <a class="nav-item nav-link" href="{{ url_for('registration_page') }}"><span
                                 class="material-icons nav-icon">
 how_to_reg
 </span>Register</a>
+                        <a class="nav-item nav-link" href="{{ url_for('login_page') }}"><span
+                                class="material-icons nav-icon">
+login
+</span>Login</a>
                     {% endif %}
                 </div>
             </div>

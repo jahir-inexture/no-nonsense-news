@@ -1,7 +1,8 @@
 from news_website import create_app, db
 from flask_migrate import Migrate
 from news_website.main.routes import homePage
-from news_website.users.routes import loginPage, registrationPage, profilePage, logout, resetPasswordRequest, resetToken
+from news_website.users.routes import loginPage, registrationPage, profilePage, logout, resetPasswordRequest, \
+    resetToken, changePasswordPage
 
 app = create_app()
 migrate = Migrate(app, db)
@@ -17,7 +18,7 @@ app.add_url_rule('/profile/<int:user_id>', view_func=profilePage.as_view('profil
 app.add_url_rule('/logout', view_func=logout.as_view('logout'))
 app.add_url_rule('/reset_password', view_func=resetPasswordRequest.as_view('reset_password_request'))
 app.add_url_rule('/reset_password/<token>', view_func=resetToken.as_view('reset_token'))
-
+app.add_url_rule('/change_password', view_func=changePasswordPage.as_view('change_password_page'))
 
 if __name__ == '__main__':
     app.run(debug=True)

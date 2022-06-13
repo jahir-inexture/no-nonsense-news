@@ -48,3 +48,8 @@ h1, h2, h3, h4, h5, h6 {
   top:4px;
   right:3%;
 }
+
+.profile-block {
+  border: 1px solid lightgray;
+  padding: 20px;
+}

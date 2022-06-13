@@ -21,7 +21,6 @@ mail = Mail()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)

@@ -36,3 +36,4 @@ def validate_name(self, field):
     """function for validating user first name and last name"""
     if not field.data.isalpha():
         raise ValidationError('Please Enter proper name only including alphabets.')
+

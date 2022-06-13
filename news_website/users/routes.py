@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask.views import MethodView
 from flask_login import current_user, login_required, login_user, logout_user
 from news_website import db, bcrypt
-from news_website.users.forms import LoginForm, RegistrationForm, PasswordResetRequestForm, ResetPasswordForm
+from news_website.users.forms import LoginForm, RegistrationForm, PasswordResetRequestForm, ResetPasswordForm, \
+    UpdateAccountForm, changePassword
 from news_website.models import User, userType
 from news_website.users.utils import send_reset_email
 
@@ -61,10 +62,34 @@ class profilePage(MethodView):
 
     def get(self, user_id):
         if user_id == current_user.id:
+            form = UpdateAccountForm()
+            form.fname.data = current_user.fname
+            form.lname.data = current_user.lname
+            form.email.data = current_user.email
+            form.phone.data = current_user.phone
+            form.age.data = current_user.age
+            form.gender.data = current_user.gender
+            form.address.data = current_user.address
             type_of_user = userType.query.filter_by(user_type_id=current_user.user_type_id).first()
-            return render_template('profile.html', typeOfUser=type_of_user)
+            return render_template('profile.html', typeOfUser=type_of_user, form=form)
         else:
             abort(403)
+
+    def post(self, user_id):
+        form = UpdateAccountForm()
+        if form.validate_on_submit():
+            current_user.fname = form.fname.data
+            current_user.lname = form.lname.data
+            current_user.email = form.email.data
+            current_user.phone = form.phone.data
+            current_user.age = form.age.data
+            current_user.gender = form.gender.data
+            current_user.address = form.address.data
+            db.session.commit()
+            flash('Your account has been updated!', 'success')
+            return redirect(url_for('profile_page', user_id=current_user.id))
+        type_of_user = userType.query.filter_by(user_type_id=current_user.user_type_id).first()
+        return render_template('profile.html', typeOfUser=type_of_user, form=form)
 
 
 class logout(MethodView):
@@ -114,3 +139,27 @@ class resetToken(MethodView):
             flash('Your password has been updated! You can now log in', 'success')
             return redirect(url_for('login_page'))
         return render_template('reset_token.html', form=form)
+
+
+class changePasswordPage(MethodView):
+    """class for changing password"""
+
+    decorators = [login_required]
+
+    def get(self):
+        form = changePassword()
+        return render_template('change_password.html', form=form)
+
+    def post(self):
+        form = changePassword()
+        if form.validate_on_submit():
+
+            if bcrypt.check_password_hash(current_user.password, form.password.data):
+                hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+                current_user.password = hashed_password
+                db.session.commit()
+                flash('Password updated successfully', 'success')
+                return redirect(url_for('profile_page', user_id=current_user.id))
+            else:
+                flash('Incorrect old password', 'danger')
+        return render_template('change_password.html', form=form)
