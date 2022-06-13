@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-steel {
-  background-color: darkblue;
+  background-color: black;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -30,4 +30,15 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
+}
+
+.nav-icon {
+  position: relative;
+  top: 19%;
+  right:3%;
+}
+
+.nav-item {
+  margin-left:5px;
+  margin-right:5px;
 }
