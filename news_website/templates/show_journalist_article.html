@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1>My Articles</h1>
+    <hr>
+    {% if news_dict |length==0 %}
+        <p>No Articles</p>
+    {% endif %}
+    <div class="news_articles">
+        {% for single_news in news_dict %}
+            <div class="article" id="{{ news_dict[single_news].news_id }}">
+                <h2><i>{{ news_dict[single_news].news_heading }}</i></h2>
+                <p>{{ news_dict[single_news].news_info }}</p>
+
+                {% for single_image in images_dict[single_news] %}
+                    <img class="news-images" src="{{ single_image }}" alt="img">
+                {% endfor %}
+                <p style="margin-top:5px; color:grey">{{ news_dict[single_news].news_date.date() }}</p>
+
+                <p>Category: {{ news_dict[single_news].categorytype.category }}</p>
+                <p>Status: {{ news_dict[single_news].is_approved }}</p>
+                <p style="display: none" id="user_id">{{ current_user.id }}</p>
+
+                <a href="{{ url_for('update_article', news_id=single_news, user_id=current_user.id) }}"
+                   class="btn btn-info"
+                   role="button">Update Article</a>
+                {#            <a href="{{ url_for('delete_article', news_id=single_news, user_id=current_user.id) }}"#}
+                {#               class="btn btn-danger" role="button">Delete Article</a>#}
+                <a href="javascript:void(0)" class="btn btn-danger delete_article"
+                   data-article_id="{{ news_dict[single_news].news_id }}" role="button">Delete Article</a>
+
+            </div>
+            <hr id="hr_{{ news_dict[single_news].news_id }}">
+        {% endfor %}
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <script src="{{ url_for('static', filename='js/articles.js') }}"></script>
+{% endblock %}

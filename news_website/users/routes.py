@@ -44,7 +44,7 @@ class registrationPage(MethodView):
         if form.validate_on_submit():
             ut = userType.query.filter_by(type=form.user_type.data).first()
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(user_type_id=ut.user_type_id, fname=form.fname.data, lname=form.lname.data,
+            user = User(user_type_id=ut.user_type_id, first_name=form.first_name.data, last_name=form.last_name.data,
                         gender=form.gender.data,
                         email=form.email.data, phone=form.phone.data, age=form.age.data, address=form.address.data,
                         password=hashed_password)
@@ -63,8 +63,8 @@ class profilePage(MethodView):
     def get(self, user_id):
         if user_id == current_user.id:
             form = UpdateAccountForm()
-            form.fname.data = current_user.fname
-            form.lname.data = current_user.lname
+            form.first_name.data = current_user.first_name
+            form.last_name.data = current_user.last_name
             form.email.data = current_user.email
             form.phone.data = current_user.phone
             form.age.data = current_user.age
@@ -78,8 +78,8 @@ class profilePage(MethodView):
     def post(self, user_id):
         form = UpdateAccountForm()
         if form.validate_on_submit():
-            current_user.fname = form.fname.data
-            current_user.lname = form.lname.data
+            current_user.first_name = form.first_name.data
+            current_user.last_name = form.last_name.data
             current_user.email = form.email.data
             current_user.phone = form.phone.data
             current_user.age = form.age.data

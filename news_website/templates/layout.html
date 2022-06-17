@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
     <title>No Nonsense News</title>
@@ -42,15 +43,30 @@ info
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     {% if current_user.is_authenticated %}
+                        {% if current_user.usertype.type == "journalist" %}
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('post_article_page', user_id=current_user.id) }}"><span
+                                    class="material-icons nav-icon md-24">
+                               post_add
+                               </span>Post Article</a>
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('show_journalist_article_page', user_id=current_user.id) }}"><span
+                                    class="material-icons nav-icon">
+                               article
+                               </span>Show my articles</a>
+                        {% endif %}
+
                         <a class="nav-item nav-link"
                            href="{{ url_for('profile_page', user_id=current_user.id) }}"><span
                                 class="material-icons nav-icon">
-account_circle
-</span>Account</a>
+                                account_circle
+                                </span>Account</a>
+
                         <a class="nav-item nav-link" href="{{ url_for('logout') }}"><span
                                 class="material-icons nav-icon">
-logout
-</span>Logout</a>
+                                logout
+                                </span>Logout</a>
+
                     {% else %}
 
                         <a class="nav-item nav-link" href="{{ url_for('registration_page') }}"><span
@@ -74,6 +90,12 @@ login
                 {% if messages %}
                     {% for category, message in messages %}
                         <div class="alert alert-{{ category }}">
+                            <i class="close icon" onclick=delete_flash(this)>
+                            <span class="material-icons flash-close-icon">
+                                cancel
+                            </span>
+                            </i>
+
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -87,14 +109,19 @@ login
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script>
+    function delete_flash(flash) {
+        $(flash).parent().remove()
+    }
+</script>
+{% block jquery %}{% endblock %}
 </body>
 </html>

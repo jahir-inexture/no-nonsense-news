@@ -9,8 +9,8 @@ from news_website.users.utils import valid_number, valid_password, validate_name
 class RegistrationForm(FlaskForm):
     """Registration form for user registration"""
     user_type = RadioField('Who are you?', choices=[('user', 'User'), ('journalist', 'Journalist')])
-    fname = StringField('First Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
-    lname = StringField('Last Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
+    first_name = StringField('First Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
+    last_name = StringField('Last Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
     gender = RadioField('Select Gender', choices=[('male', 'Male'), ('female', 'Female')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     phone = StringField('Phone Number', validators=[DataRequired(), valid_number, Length(min=10, max=10)])
@@ -45,8 +45,8 @@ class LoginForm(FlaskForm):
 
 class UpdateAccountForm(FlaskForm):
     """Form for updating user details"""
-    fname = StringField('First Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
-    lname = StringField('Last Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
+    first_name = StringField('First Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
+    last_name = StringField('Last Name', validators=[DataRequired(), validate_name, Length(min=2, max=20)])
     gender = RadioField('Select Gender', choices=[('male', 'Male'), ('female', 'Female')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     phone = StringField('Phone Number', validators=[DataRequired(), valid_number, Length(min=10, max=10)])
