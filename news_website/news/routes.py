@@ -1,5 +1,4 @@
 import json
-
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, abort, Response
 from flask.views import MethodView, View
 from flask_login import login_required, current_user
@@ -8,7 +7,7 @@ from news_website.models import News, newsCategory, journalistNewsMapping, newsI
 from news_website.news.forms import PostArticlesForm, ArticlesImageUploadForm, UpdateArticlesForm
 import datetime
 import os
-from news_website.news.utils import allowed_file
+from news_website.news.utils import allowed_file, get_random_alphanumeric_string
 
 news = Blueprint("news", __name__)
 
@@ -45,13 +44,14 @@ class postArticlesPage(MethodView):
 
             for file in form1.picture.data:
                 if file.filename:
-                    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename))
-                    news_image = newsImageMapping(news_id=post.news_id, image=file.filename)
+                    generate_filename = get_random_alphanumeric_string(32) + '_' + file.filename
+                    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'],
+                                           generate_filename))
+                    news_image = newsImageMapping(news_id=post.news_id, image=generate_filename)
                     db.session.add(news_image)
                     db.session.commit()
 
             flash('Your article has been successfully sent to admin to get verified.', 'success')
-            # return redirect(url_for('home_page'))
             return redirect(url_for('show_journalist_article_page', user_id=user_id))
 
 
@@ -122,19 +122,22 @@ class updateArticlesPage(MethodView):
             for file in form.picture.data:
                 if not allowed_file(file.filename):
                     flash('Please select valid extensions such as jpg, png or jpeg', 'warning')
-                    # return render_template('update_articles.html', form=form, categories=newsCategory.query.all())
                     return redirect(url_for('update_article', news_id=news_id, user_id=user_id))
                 elif file.filename in images_data:
-                    flash('Image with this name already exists please select different image or change the name of the image', 'warning')
+                    flash(
+                        'Image with this name already exists please select different image or change the name of the image',
+                        'warning')
                     return redirect(url_for('update_article', news_id=news_id, user_id=user_id))
 
         for file in form.picture.data:
             if file.filename:
-                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename))
-                news_image = newsImageMapping(news_id=news_id, image=file.filename)
+                generate_filename = get_random_alphanumeric_string(32) + '_' + file.filename
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], generate_filename))
+                news_image = newsImageMapping(news_id=news_id, image=generate_filename)
                 db.session.add(news_image)
                 db.session.commit()
 
+        db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('show_journalist_article_page', user_id=current_user.id))
 
@@ -148,12 +151,17 @@ class DeleteArticles(MethodView):
         if user_id == current_user.id and current_user.usertype.type == "journalist":
             journalist_news_object = journalistNewsMapping.query.filter_by(news_id=news_id).first()
             news_image_object = newsImageMapping.query.filter_by(news_id=news_id).first()
+            news_image_list = newsImageMapping.query.filter_by(news_id=news_id).all()
             news_object = News.query.filter_by(news_id=news_id).first()
             db.session.delete(journalist_news_object)
             if news_image_object:
                 db.session.delete(news_image_object)
             db.session.delete(news_object)
             db.session.commit()
+
+            for news_img in news_image_list:
+                os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], news_img.image))
+
             return {"success": True, "message": "Article deleted"}
         else:
             abort(403)
@@ -175,6 +183,7 @@ class DeleteArticlesImage(MethodView):
                                                                newsImageMapping.image == image_txt).scalar()
             db.session.delete(news_image_mapping)
             db.session.commit()
+            os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], news_image_mapping.image))
 
             return {"success": True}
         else:

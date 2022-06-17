@@ -42,3 +42,7 @@ function RemoveImage(index) {
         }
     })
 }
+
+function delete_flash(flash) {
+        $(flash).parent().remove()
+    }

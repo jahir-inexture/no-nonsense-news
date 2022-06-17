@@ -102,5 +102,3 @@ class newsImageMapping(db.Model):
     image = db.Column(db.String)
 
 
-    def __repr__(self):
-        return self.image
