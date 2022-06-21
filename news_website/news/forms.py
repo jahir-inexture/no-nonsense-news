@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField, SelectField
 from wtforms.validators import DataRequired, Length
-
 from news_website.models import newsCategory
 
 

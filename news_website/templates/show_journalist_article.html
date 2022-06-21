@@ -17,16 +17,21 @@
                 <p style="margin-top:5px; color:grey">{{ news_dict[single_news].news_date.date() }}</p>
 
                 <p>Category: {{ news_dict[single_news].categorytype.category }}</p>
-                <p>Status: {{ news_dict[single_news].is_approved }}</p>
-                <p style="display: none" id="user_id">{{ current_user.id }}</p>
+                <p>Checked: {{ news_dict[single_news].checked }}</p>
+                {% if news_dict[single_news].checked == True %}
+                    <p>Approved: {{ news_dict[single_news].is_approved }}</p>
+                {% else %}
+                    {% if current_user.usertype.type == "journalist" %}
+                        <p style="display: none" id="user_id">{{ current_user.id }}</p>
 
-                <a href="{{ url_for('update_article', news_id=single_news, user_id=current_user.id) }}"
-                   class="btn btn-info"
-                   role="button">Update Article</a>
-                {#            <a href="{{ url_for('delete_article', news_id=single_news, user_id=current_user.id) }}"#}
-                {#               class="btn btn-danger" role="button">Delete Article</a>#}
-                <a href="javascript:void(0)" class="btn btn-danger delete_article"
-                   data-article_id="{{ news_dict[single_news].news_id }}" role="button">Delete Article</a>
+                        <a href="{{ url_for('update_article', news_id=single_news, user_id=current_user.id) }}"
+                           class="btn btn-info"
+                           role="button">Update Article</a>
+
+                        <a href="javascript:void(0)" class="btn btn-danger delete_article"
+                           data-article_id="{{ news_dict[single_news].news_id }}" role="button">Delete Article</a>
+                        {% endif %}
+                {% endif %}
 
             </div>
             <hr id="hr_{{ news_dict[single_news].news_id }}">

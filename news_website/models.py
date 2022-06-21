@@ -74,10 +74,12 @@ class News(db.Model):
     news_heading = db.Column(db.String, nullable=False)
     news_info = db.Column(db.String, nullable=False)
     news_date = db.Column(db.DateTime)
-    is_approved = db.Column(db.Boolean, nullable=False)
+    is_approved = db.Column(db.Boolean)
+    checked = db.Column(db.Boolean)
     news_category_id = db.Column(db.Integer, db.ForeignKey('news_category.category_id'))
     news_journalist = db.relationship('journalistNewsMapping', backref='newsjournalist', lazy=True)
     news_image = db.relationship('newsImageMapping', backref='newsimage', cascade="all, delete-orphan", lazy="joined")
+
 
 
 class journalistNewsMapping(db.Model):

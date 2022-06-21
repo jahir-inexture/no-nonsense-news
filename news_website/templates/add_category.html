@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h3><i>Categories available: </i></h3>
+    {% for single_category in categories %}
+        &#8226; {{ single_category.category }}
+        {% if (category_count > 1) and (single_category.category_id not in distinct_news_list) %}
+            <a href="{{ url_for('delete_category',user_id=current_user.id, categoryId=single_category.category_id) }}"
+               class="btn btn-danger"
+               style="padding: 3px 6px; font-size: 15px;"
+               role="button">Delete</a>
+        {% endif %}
+        </p>
+    {% endfor %}
+    <p><b>Note: </b>You can only delete categories on which there are no news.</p>
+    <div class="container">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+
+                <div class="form-group">
+                    {{ form.news_type.label(class="form-control-label") }}
+
+                    {% if form.news_type.errors %}
+                        {{ form.news_type(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.news_type.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.news_type(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}

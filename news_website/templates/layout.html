@@ -54,6 +54,23 @@ info
                                     class="material-icons nav-icon">
                                article
                                </span>Show my articles</a>
+                        {% elif current_user.usertype.type == "admin" %}
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('show_all_articles', user_id=current_user.id, news_id=news_id) }}"><span
+                                    class="material-icons nav-icon ">
+                               article
+                               </span>Show All Articles</a>
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('check_articles', user_id=current_user.id, news_id=news_id) }}"><span
+                                    class="material-icons nav-icon ">
+                               task
+                               </span>Check Articles</a>
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('add_category', user_id=current_user.id) }}"><span
+                                    class="material-icons nav-icon ">
+                               category
+                               </span>Add/Delete Category</a>
+
                         {% endif %}
 
                         <a class="nav-item nav-link"

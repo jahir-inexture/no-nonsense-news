@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1>List of approved articles</h1>
+    <hr>
+    <div class="approved_articles">
+        {% for article in news_data_dict %}
+            <div>
+                <h2>{{ news_data_dict[article]["data"].news_heading }}</h2>
+                <p>{{ news_data_dict[article]["data"].news_info }}</p>
+                {% for article_img in news_data_dict[article]["images"] %}
+                    <img class="news-images" src="{{ article_img }}" alt=" img">
+                {% endfor %}
+                <p style="margin-top:5px;">Category: {{ news_data_dict[article]["data"].categorytype.category }}</p>
+                <p>Checked: {{ news_data_dict[article]["data"].checked }}</p>
+                {% if news_data_dict[article]["data"].checked == True %}
+                    <p>Approved: {{ news_data_dict[article]["data"].is_approved }}</p>
+                {% endif %}
+
+                <div style="color:grey;">{{ news_data_dict[article]["data"].news_date.date() }}
+                    <p>Article by
+                        <a href="{{ url_for('show_articles_by_journalist', journalist_id=news_data_dict[article]['author_id'], user_id=current_user.id) }}">{{ news_data_dict[article]['author_first_name'] }} {{ news_data_dict[article]['author_last_name'] }}</a>
+                    </p>
+
+                </div>
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

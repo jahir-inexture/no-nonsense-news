@@ -31,10 +31,10 @@ class postArticlesPage(MethodView):
         if form.validate_on_submit() and form1.validate_on_submit():
             for file in form1.picture.data:
                 if not allowed_file(file.filename):
-                    flash('Please select valid extensions such as jpg, png or jpeg', 'warning')
+                    flash('Please select valid extensions such as jpg, png, jpeg or webp', 'warning')
                     return render_template('post_article.html', form=form, form1=form1, categories=categories)
             post = News(news_heading=form.title.data, news_info=form.content.data, news_date=datetime.datetime.now(),
-                        is_approved=False, news_category_id=request.form.get('category'))
+                        checked=False, news_category_id=request.form.get('category'))
             db.session.add(post)
             db.session.commit()
 
@@ -121,7 +121,7 @@ class updateArticlesPage(MethodView):
 
             for file in form.picture.data:
                 if not allowed_file(file.filename):
-                    flash('Please select valid extensions such as jpg, png or jpeg', 'warning')
+                    flash('Please select valid extensions such as jpg, png, jpeg or webp', 'warning')
                     return redirect(url_for('update_article', news_id=news_id, user_id=user_id))
                 elif file.filename in images_data:
                     flash(

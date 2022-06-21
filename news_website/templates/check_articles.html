@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1>Articles</h1>
+    <hr>
+    {% if news_data_dict |length==0 %}
+        <p>No Articles</p>
+    {% endif %}
+    <div class="check-articles">
+        {% for news in news_data_dict %}
+            <div class="check-single-article">
+                <h2><i>{{ news_data_dict[news]['news_heading'] }}</i></h2>
+                <p>{{ news_data_dict[news]['news_info'] }}</p>
+                {% if  news_data_dict[news]['images'] %}
+                    {% for single_image in news_data_dict[news]['images'] %}
+                        <img class="news-images" src="{{ single_image }}" alt="img">
+
+                    {% endfor %}
+                {% endif %}
+                <p style="margin-top:5px;">Category: {{ news_data_dict[news]['news_category'] }}</p>
+                <div style="color:grey">{{ news_data_dict[news]['news_date'] }}
+                    <p>Article by
+                        <a href="{{ url_for('show_articles_by_journalist', journalist_id=news_data_dict[news]['author_id'], user_id=current_user.id) }}"> {{ news_data_dict[news]['author_first_name'] }} {{ news_data_dict[news]['author_last_name'] }}</a>
+                    </p>
+                </div>
+                <a href="{{ url_for('approve_article', news_id=news, user_id=current_user.id) }}" class="btn btn-info"
+                   role="button">Approve</a>
+
+                <a href="{{ url_for('decline_article', news_id=news, user_id=current_user.id) }}" class="btn btn-danger"
+                   role="button">Decline</a>
+
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock content %}
