@@ -10,13 +10,13 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-class userType(db.Model):
+class UserType(db.Model):
     """model for storing different types of user along with their ids"""
 
     __tablename__ = "user_type"
     user_type_id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
-    utype = db.relationship('User', backref='usertype', lazy=True)
+    type_of_user = db.relationship('User', backref='usertype', lazy=True)
 
 
 class User(db.Model, UserMixin):
@@ -34,21 +34,21 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     has_premium = db.Column(db.Boolean, default=False, nullable=False)
     user_type_id = db.Column(db.Integer, db.ForeignKey('user_type.user_type_id'))
-    journalist_news = db.relationship('journalistNewsMapping', backref='journalistnews', lazy=True)
+    journalist_news = db.relationship('JournalistNewsMapping', backref='journalistnews', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         """function to get the reset token which will expire in 30 minutes"""
 
-        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.id}).decode('utf-8')
+        serializer = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return serializer.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
         """function for verifying the reset token"""
 
-        s = Serializer(current_app.config['SECRET_KEY'])
+        serializer = Serializer(current_app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token)['user_id']
+            user_id = serializer.loads(token)['user_id']
         except (KeyError, Exception):
             return None
         return User.query.get(user_id)
@@ -57,7 +57,7 @@ class User(db.Model, UserMixin):
         return f"User('{self.first_name}', '{self.email}')"
 
 
-class newsCategory(db.Model):
+class NewsCategory(db.Model):
     """model for different categories of news"""
 
     __tablename__ = "news_category"
@@ -76,13 +76,13 @@ class News(db.Model):
     news_date = db.Column(db.DateTime)
     is_approved = db.Column(db.Boolean)
     checked = db.Column(db.Boolean)
+    scraped_data = db.Column(db.Boolean)
     news_category_id = db.Column(db.Integer, db.ForeignKey('news_category.category_id'))
-    news_journalist = db.relationship('journalistNewsMapping', backref='newsjournalist', lazy=True)
-    news_image = db.relationship('newsImageMapping', backref='newsimage', cascade="all, delete-orphan", lazy="joined")
+    news_journalist = db.relationship('JournalistNewsMapping', backref='newsjournalist', lazy=True)
+    news_image = db.relationship('NewsImageMapping', backref='newsimage', cascade="all, delete-orphan", lazy="joined")
 
 
-
-class journalistNewsMapping(db.Model):
+class JournalistNewsMapping(db.Model):
     """model for mapping journalist(user) id and news id"""
 
     __tablename__ = "journalist_news_mapping"
@@ -93,7 +93,7 @@ class journalistNewsMapping(db.Model):
     news_id = db.Column(db.Integer, db.ForeignKey('news.news_id'), nullable=False)
 
 
-class newsImageMapping(db.Model):
+class NewsImageMapping(db.Model):
     """model for news id and images mapping"""
 
     __tablename__ = "news_image_mapping"

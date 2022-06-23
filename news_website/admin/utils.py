@@ -1,11 +1,10 @@
 from wtforms import ValidationError
-
-from news_website.models import newsCategory, News
+from news_website.models import NewsCategory, News
 
 
 def check_category(self, field):
     """function for checking whether the newly added category already exists or not"""
-    category_obj = newsCategory.query.filter_by(category=field.data.title()).first()
+    category_obj = NewsCategory.query.filter_by(category=field.data.title()).first()
     if category_obj:
         raise ValidationError('Category already exists please choose a different one.')
 

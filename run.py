@@ -3,34 +3,34 @@ from flask_migrate import Migrate
 
 from news_website.admin.routes import checkArticlesPage, approveArticle, declineArticle, showAllArticles, \
     showArticlesByJournalist, addCategory, deleteCategory
-from news_website.main.routes import homePage
-from news_website.users.routes import loginPage, registrationPage, profilePage, logout, resetPasswordRequest, \
-    resetToken, changePasswordPage
-from news_website.news.routes import postArticlesPage, showJournalistArticles, updateArticlesPage, DeleteArticles, \
+from news_website.main.routes import HomePage
+from news_website.users.routes import LoginPage, RegistrationPage, ProfilePage, Logout, ResetPasswordRequest, \
+    ResetToken, ChangePasswordPage
+from news_website.news.routes import PostArticlesPage, ShowJournalistArticles, UpdateArticlesPage, DeleteArticles, \
     DeleteArticlesImage
 
 app = create_app()
 migrate = Migrate(app, db)
 
 # urls for home page
-app.add_url_rule('/', view_func=homePage.as_view('home'))
-app.add_url_rule('/home', view_func=homePage.as_view('home_page'))
+app.add_url_rule('/', view_func=HomePage.as_view('home'))
+app.add_url_rule('/home', view_func=HomePage.as_view('home_page'))
 
 # urls for users
-app.add_url_rule('/login', view_func=loginPage.as_view('login_page'))
-app.add_url_rule('/registration', view_func=registrationPage.as_view('registration_page'))
-app.add_url_rule('/profile/<int:user_id>', view_func=profilePage.as_view('profile_page'))
-app.add_url_rule('/logout', view_func=logout.as_view('logout'))
-app.add_url_rule('/reset_password', view_func=resetPasswordRequest.as_view('reset_password_request'))
-app.add_url_rule('/reset_password/<token>', view_func=resetToken.as_view('reset_token'))
-app.add_url_rule('/change_password', view_func=changePasswordPage.as_view('change_password_page'))
+app.add_url_rule('/login', view_func=LoginPage.as_view('login_page'))
+app.add_url_rule('/registration', view_func=RegistrationPage.as_view('registration_page'))
+app.add_url_rule('/profile/<int:user_id>', view_func=ProfilePage.as_view('profile_page'))
+app.add_url_rule('/Logout', view_func=Logout.as_view('Logout'))
+app.add_url_rule('/reset_password', view_func=ResetPasswordRequest.as_view('reset_password_request'))
+app.add_url_rule('/reset_password/<token>', view_func=ResetToken.as_view('reset_token'))
+app.add_url_rule('/change_password', view_func=ChangePasswordPage.as_view('change_password_page'))
 
 # urls for news
-app.add_url_rule('/post_articles/<int:user_id>', view_func=postArticlesPage.as_view('post_article_page'))
+app.add_url_rule('/post_articles/<int:user_id>', view_func=PostArticlesPage.as_view('post_article_page'))
 app.add_url_rule('/show_journalist_articles/<int:user_id>',
-                 view_func=showJournalistArticles.as_view('show_journalist_article_page'))
+                 view_func=ShowJournalistArticles.as_view('show_journalist_article_page'))
 app.add_url_rule('/show_journalist_articles/<int:user_id>/update_article/<int:news_id>',
-                 view_func=updateArticlesPage.as_view('update_article'))
+                 view_func=UpdateArticlesPage.as_view('update_article'))
 
 app.add_url_rule('/delete_article/<int:user_id>/<int:news_id>',
                  view_func=DeleteArticles.as_view('delete_article'))

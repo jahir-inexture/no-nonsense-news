@@ -2,6 +2,9 @@
 {% block content %}
     <h1>List of approved articles</h1>
     <hr>
+    {% if news_data_dict |length==0 %}
+        <p>No Articles</p>
+    {% endif %}
     <div class="approved_articles">
         {% for article in news_data_dict %}
             <div>
