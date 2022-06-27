@@ -1,11 +1,27 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <h1>List of approved articles</h1>
+{#    <form action="" method="post">#}
+{#        {{ form.hidden_tag() }}#}
+{##}
+{#        <div class="form-group">#}
+{#            {{ form.filter.label }}<br>#}
+{#            {{ form.filter }}<br>#}
+{#            {% for error in form.filter.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#        <div class="form-group">#}
+{#            {{ form.search(class="btn btn-outline-info") }}#}
+{#        </div>#}
+{#    </form>#}
+    <h1>List of all articles</h1>
     <hr>
     {% if news_data_dict |length==0 %}
         <p>No Articles</p>
     {% endif %}
-    <div class="approved_articles">
+
+
+    <div class="all_articles">
         {% for article in news_data_dict %}
             <div>
                 <h2>{{ news_data_dict[article]["data"].news_heading }}</h2>
@@ -29,4 +45,17 @@
             </div>
         {% endfor %}
     </div>
+    {% for page_num in news_obj.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if news_obj.page == page_num %}
+                <a class="btn btn-info mb-4"
+                   href="{{ url_for('show_all_articles', page=page_num, user_id=current_user.id, news_id=news_id) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{{ url_for('show_all_articles', page=page_num, user_id=current_user.id, news_id=news_id) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
 {% endblock content %}

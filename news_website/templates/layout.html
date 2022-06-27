@@ -113,16 +113,16 @@ login
                     <div style="text-align: center">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="#">Politics</a>
+                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Politics") }}">Politics</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="#">Entertainment</a>
+                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Entertainment") }}">Entertainment</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="#">Sports</a>
+                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Sports") }}">Sports</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="#">Education</a>
+                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Education") }}">Education</a>
                             </li>
                         </ul>
                     </div>

@@ -32,4 +32,17 @@
             <hr>
         {% endfor %}
     </div>
+    {% for page_num in news_raw_data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if news_raw_data.page == page_num %}
+                <a class="btn btn-info mb-4"
+                   href="{{ url_for('check_articles', page=page_num, user_id=current_user.id) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{{ url_for('check_articles', page=page_num, user_id=current_user.id) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
 {% endblock content %}

@@ -30,11 +30,24 @@
 
                         <a href="javascript:void(0)" class="btn btn-danger delete_article"
                            data-article_id="{{ news_dict[single_news].news_id }}" role="button">Delete Article</a>
-                        {% endif %}
+                    {% endif %}
                 {% endif %}
 
             </div>
             <hr id="hr_{{ news_dict[single_news].news_id }}">
         {% endfor %}
     </div>
+    {% for page_num in journalist_news_id_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if journalist_news_id_list.page == page_num %}
+                <a class="btn btn-info mb-4"
+                   href="{{ url_for('show_journalist_article_page', user_id=current_user.id, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{{ url_for('show_journalist_article_page', user_id=current_user.id, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
 {% endblock content %}

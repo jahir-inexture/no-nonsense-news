@@ -29,10 +29,12 @@ def create_app(config_class=Config):
     from news_website.news.routes import news
     from news_website.errors.handlers import errors
     from news_website.admin.routes import admin
+    from news_website.public.routes import public
     app.register_blueprint(users)
     app.register_blueprint(main)
     app.register_blueprint(news)
     app.register_blueprint(errors)
     app.register_blueprint(admin)
+    app.register_blueprint(public)
 
     return app

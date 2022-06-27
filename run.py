@@ -1,9 +1,9 @@
 from news_website import create_app, db
 from flask_migrate import Migrate
-
 from news_website.admin.routes import checkArticlesPage, approveArticle, declineArticle, showAllArticles, \
     showArticlesByJournalist, addCategory, deleteCategory
 from news_website.main.routes import HomePage
+from news_website.public.routes import ShowNews
 from news_website.users.routes import LoginPage, RegistrationPage, ProfilePage, Logout, ResetPasswordRequest, \
     ResetToken, ChangePasswordPage
 from news_website.news.routes import PostArticlesPage, ShowJournalistArticles, UpdateArticlesPage, DeleteArticles, \
@@ -49,6 +49,12 @@ app.add_url_rule('/admin/show_articles_by_journalist/<int:user_id>/<int:journali
 app.add_url_rule('/admin/add_category/<int:user_id>', view_func=addCategory.as_view('add_category'))
 app.add_url_rule('/admin/delete_category/<int:user_id>/<int:categoryId>',
                  view_func=deleteCategory.as_view('delete_category'))
+
+# urls for public
+app.add_url_rule('/news/<string:category>', view_func=ShowNews.as_view('show_news'))
+# app.add_url_rule('/news/entertainment', view_func=ShowEntertainmentNews.as_view('show_entertainment_news'))
+# app.add_url_rule('/news/sports', view_func=ShowSportsNews.as_view('show_sports_news'))
+# app.add_url_rule('/news/education', view_func=ShowEducationNews.as_view('show_education_news'))
 
 if __name__ == '__main__':
     app.run(debug=True)

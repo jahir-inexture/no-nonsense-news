@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h3><i>{{ category }}</i></h3>
+    <hr style="height:3px; background-color: cadetblue; border:none">
+    {% for news in news_dict_data %}
+        <div class="news">
+            <h4>{{ news_dict_data[news]['data'].news_heading }}</h4>
+            <p>{{ news_dict_data[news]['data'].news_info }}</p>
+            <img src = "{{ news_dict_data[news]['image'] }}" alt="img">
+            <p style="color:#6b6b6b; margin-top:1px">{{ news_dict_data[news]['data'].news_date }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+    {% for page_num in news_data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if news_data.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('show_news', page=page_num, category=category) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('show_news', page=page_num, category=category) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}

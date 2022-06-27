@@ -1,9 +1,9 @@
-from flask import Blueprint, redirect, url_for, render_template, abort
+from flask import Blueprint, redirect, url_for, render_template, abort, request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 from news_website import db
-from news_website.admin.forms import AddCategoryForm
-from news_website.admin.utils import get_distinct_news_category
+from news_website.admin.forms import AddCategoryForm, FilterForm
+from news_website.admin.utils import get_distinct_news_category, get_filtered_news
 from news_website.models import News, JournalistNewsMapping, NewsImageMapping, User, UserType, NewsCategory
 
 admin = Blueprint("admin", __name__)
@@ -16,8 +16,10 @@ class checkArticlesPage(MethodView):
     def get(self, user_id):
         if user_id == current_user.id and current_user.usertype.type == "admin":
             news_data_dict = {}
-            news_raw_data = News.query.filter_by(checked=False).order_by(News.news_date).all()
-            for data in news_raw_data:
+            page = request.args.get('page', 1, type=int)
+            news_raw_data = News.query.filter_by(checked=False).order_by(News.news_date).paginate(page=page,
+                                                                                                  per_page=5)
+            for data in news_raw_data.items:
                 news_data_dict[data.news_id] = {}
                 author = JournalistNewsMapping.query.filter_by(news_id=data.news_id).first()
                 news_data_dict[data.news_id]["author_id"] = author.journalist_id
@@ -35,7 +37,7 @@ class checkArticlesPage(MethodView):
                         image_file = url_for('static', filename='news_images/' + one_image.image)
                         news_data_dict[data.news_id]["images"].append(image_file)
 
-            return render_template('check_articles.html', news_data_dict=news_data_dict)
+            return render_template('check_articles.html', news_data_dict=news_data_dict, news_raw_data=news_raw_data)
         else:
             abort(403)
 
@@ -78,24 +80,27 @@ class showAllArticles(MethodView):
 
     def get(self, user_id):
         if user_id == current_user.id and current_user.usertype.type == "admin":
-            news_obj = News.query.filter_by(scraped_data=False).all()
-            news_data_dict = {}
-            for data in news_obj:
-                news_data_dict[data.news_id] = {}
-                news_data_dict[data.news_id]["data"] = data
-                author = JournalistNewsMapping.query.filter_by(news_id=data.news_id).first()
-                news_data_dict[data.news_id]["author_id"] = author.journalistnews.id
-                news_data_dict[data.news_id]["author_first_name"] = author.journalistnews.first_name
-                news_data_dict[data.news_id]["author_last_name"] = author.journalistnews.last_name
-                img_obj = NewsImageMapping.query.filter_by(news_id=data.news_id).all()
-                news_data_dict[data.news_id]["images"] = []
-                if img_obj:
-                    for img in img_obj:
-                        image_file = url_for('static', filename='news_images/' + img.image)
-                        news_data_dict[data.news_id]["images"].append(image_file)
-            return render_template('show_all_articles.html', news_data_dict=news_data_dict)
+            # form = FilterForm()
+            page = request.args.get('page', 1, type=int)
+            news_obj = News.query.filter_by(scraped_data=False).order_by(News.news_date).paginate(page=page,
+                                                                                                  per_page=5)
+            news_data_dict = get_filtered_news(news_obj)
+            return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj)
         else:
             abort(403)
+
+    # def post(self, user_id):
+    #     form = FilterForm()
+    #     page = request.args.get('page', 1, type=int)
+    #     if form.filter.data == "filter_approved":
+    #         news_obj = News.query.filter_by(is_approved=True, scraped_data=False).order_by(
+    #             News.news_date.desc()).paginate(
+    #             page=page, per_page=5)
+    #         news_data_dict = get_filtered_news(news_obj)
+    #         return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj,
+    #                                form=form)
+    #
+    #     return redirect(url_for('show_all_articles', user_id=user_id))
 
 
 class showArticlesByJournalist(MethodView):
@@ -103,13 +108,15 @@ class showArticlesByJournalist(MethodView):
 
     def get(self, user_id, journalist_id):
         if user_id == current_user.id and current_user.usertype.type == "admin":
+            page = request.args.get('page', 1, type=int)
+
             journalist_news_id_list = User.query \
                 .join(JournalistNewsMapping, User.id == JournalistNewsMapping.journalist_id) \
                 .add_columns(JournalistNewsMapping.news_id) \
-                .filter(User.id == journalist_id).all()
+                .filter(User.id == journalist_id).paginate(page=page, per_page=5)
             news_dict = {}
             images_dict = {}
-            for articles in journalist_news_id_list:
+            for articles in journalist_news_id_list.items:
                 news_list = News.query.filter_by(news_id=articles[1]).first()
                 images_list = NewsImageMapping.query.filter_by(news_id=articles[1]).all()
                 news_dict[news_list.news_id] = news_list
@@ -118,7 +125,8 @@ class showArticlesByJournalist(MethodView):
                     image_file = url_for('static', filename='news_images/' + one_image.image)
                     images_dict[news_list.news_id].append(image_file)
 
-            return render_template('show_journalist_article.html', news_dict=news_dict, images_dict=images_dict)
+            return render_template('show_journalist_article.html', news_dict=news_dict, images_dict=images_dict,
+                                   journalist_news_id_list=journalist_news_id_list)
         else:
             abort(403)
 

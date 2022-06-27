@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, abort, Response
-from flask.views import MethodView, View
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, abort
+from flask.views import MethodView
 from flask_login import login_required, current_user
 from news_website import db
 from news_website.models import News, NewsCategory, JournalistNewsMapping, NewsImageMapping, User
@@ -61,13 +61,15 @@ class ShowJournalistArticles(MethodView):
 
     def get(self, user_id):
         if user_id == current_user.id and current_user.usertype.type == "journalist":
+            page = request.args.get('page', 1, type=int)
+
             journalist_news_id_list = User.query \
                 .join(JournalistNewsMapping, User.id == JournalistNewsMapping.journalist_id) \
                 .add_columns(JournalistNewsMapping.news_id) \
-                .filter(User.id == current_user.id).all()
+                .filter(User.id == current_user.id).paginate(page=page, per_page=5)
             news_dict = {}
             images_dict = {}
-            for articles in journalist_news_id_list:
+            for articles in journalist_news_id_list.items:
                 news_list = News.query.filter_by(news_id=articles[1]).first()
                 images_list = NewsImageMapping.query.filter_by(news_id=articles[1]).all()
                 news_dict[news_list.news_id] = news_list
@@ -76,7 +78,7 @@ class ShowJournalistArticles(MethodView):
                     image_file = url_for('static', filename='news_images/' + one_image.image)
                     images_dict[news_list.news_id].append(image_file)
 
-            return render_template('show_journalist_article.html', news_dict=news_dict, images_dict=images_dict)
+            return render_template('show_journalist_article.html', news_dict=news_dict, images_dict=images_dict, journalist_news_id_list=journalist_news_id_list)
         else:
             abort(403)
 
