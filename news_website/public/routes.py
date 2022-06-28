@@ -1,10 +1,10 @@
 from datetime import date
-from flask import Blueprint, render_template, abort, flash, redirect, url_for
+from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 from news_website import db
 from news_website.admin.forms import FilterForm
-from news_website.models import PremiumUserMapping
+from news_website.models import PremiumUserMapping, News, NewsImageMapping, JournalistNewsMapping, User
 from news_website.public.utils import get_news
 from dateutil.relativedelta import relativedelta
 
@@ -35,8 +35,6 @@ class Subscribe(MethodView):
                     return render_template('subscribe.html')
             else:
                 return render_template('subscribe.html')
-            # else:
-            #     return redirect(url_for('subscribe', user_id=current_user.id))
 
         else:
             abort(403)
@@ -55,3 +53,54 @@ class BuySubscription(MethodView):
             return redirect(url_for('subscribe', user_id=current_user.id))
         else:
             abort(403)
+
+
+class GetJournalistAllArticles(MethodView):
+    """class for getting all the articles posted by journalist which is approved by the admin which will be shown publicly"""
+
+    def get(self):
+        page = request.args.get('page', 1, type=int)
+        raw_data = News.query.filter_by(scraped_data=False, checked=True, is_approved=True).order_by(
+            News.news_date.desc()).paginate(page=page, per_page=5)
+        news_dict = {}
+
+        for data in raw_data.items:
+            news_dict[data.news_id] = {}
+            news_dict[data.news_id]["heading"] = data.news_heading
+            news_dict[data.news_id]["content"] = data.news_info
+            news_dict[data.news_id]["date"] = data.news_date
+            author = JournalistNewsMapping.query.filter_by(news_id=data.news_id).first()
+            news_dict[data.news_id]["author"] = author
+            news_dict[data.news_id]["image"] = []
+            images_data = NewsImageMapping.query.filter_by(news_id=data.news_id).all()
+            for images in images_data:
+                image_file = url_for('static', filename='news_images/' + images.image)
+                news_dict[data.news_id]["image"].append(image_file)
+
+        return render_template('journalist_articles.html', news_dict=news_dict, raw_data=raw_data)
+
+
+class GetJournalistArticles(MethodView):
+    """class for getting specific journalist articles"""
+
+    def get(self, journalist_id):
+        page = request.args.get('page', 1, type=int)
+        journalist_data = User.query.filter_by(id=journalist_id).first()
+        journalist_news = JournalistNewsMapping.query.filter_by(journalist_id=journalist_id).paginate(page=page,
+                                                                                                      per_page=5)
+        news_dict = {}
+        for data in journalist_news.items:
+            news_data = News.query.filter_by(news_id=data.news_id, checked=True, is_approved=True).first()
+            if news_data:
+                news_dict[news_data.news_id] = {}
+                news_dict[news_data.news_id]["heading"] = news_data.news_heading
+                news_dict[news_data.news_id]["content"] = news_data.news_info
+                news_dict[news_data.news_id]["date"] = news_data.news_date
+                images_data = NewsImageMapping.query.filter_by(news_id=news_data.news_id).all()
+                news_dict[data.news_id]["image"] = []
+                for images in images_data:
+                    image_file = url_for('static', filename='news_images/' + images.image)
+                    news_dict[data.news_id]["image"].append(image_file)
+            print(news_dict)
+        return render_template('articles_by_journalist.html', news_dict=news_dict, journalist_news=journalist_news,
+                               journalist_data=journalist_data)

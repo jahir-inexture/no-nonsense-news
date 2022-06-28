@@ -41,6 +41,11 @@ info
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
+                    <a class="nav-item nav-link"
+                       href="{{ url_for('journalist_articles') }}">
+                        <span class="material-icons nav-icon">
+                            feed
+                        </span>Journalist Articles</a>
                     {% if current_user.is_authenticated %}
                         {% if current_user.usertype.type == "journalist" %}
                             <a class="nav-item nav-link"
@@ -150,7 +155,7 @@ login
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
+                        <div class="alert alert-{{ category }}" id="AMessage">
                             <i class="close icon" onclick=delete_flash(this)>
                             <span class="material-icons flash-close-icon">
                                 cancel
@@ -178,7 +183,6 @@ login
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
 <script src="{{ url_for('static', filename='js/articles.js') }}"></script>
 
 </body>

@@ -2,9 +2,6 @@ import sys
 import scrapy
 from datetime import datetime
 from scrapy.crawler import CrawlerProcess
-from twisted.internet import reactor, defer
-from scrapy.crawler import CrawlerRunner
-
 from news_website import db
 from news_website.models import News, NewsCategory, NewsImageMapping
 from run import app
@@ -147,17 +144,6 @@ class EducationSpider(scrapy.Spider):
         next_page = response.css('a.next.page-numbers').attrib['href']
         if self.page_number < 5:
             yield response.follow(next_page, callback=self.parse)
-
-
-runner = CrawlerRunner()
-
-
-@defer.inlineCallbacks
-def crawl():
-    yield runner.crawl(PoliticsSpider)
-    yield runner.crawl(EntertainmentSpider)
-    reactor.stop()
-
 
 if __name__ == "__main__":
     process = CrawlerProcess()

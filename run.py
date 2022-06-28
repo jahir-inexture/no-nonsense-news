@@ -3,7 +3,8 @@ from flask_migrate import Migrate
 from news_website.admin.routes import CheckArticlesPage, ApproveArticle, DeclineArticle, ShowAllArticles, \
     ShowArticlesByJournalist, AddCategory, DeleteCategory, ScrapData
 from news_website.main.routes import HomePage
-from news_website.public.routes import ShowNews, Subscribe, BuySubscription
+from news_website.public.routes import ShowNews, Subscribe, BuySubscription, GetJournalistAllArticles, \
+    GetJournalistArticles
 from news_website.users.routes import LoginPage, RegistrationPage, ProfilePage, Logout, ResetPasswordRequest, \
     ResetToken, ChangePasswordPage
 from news_website.news.routes import PostArticlesPage, ShowJournalistArticles, UpdateArticlesPage, DeleteArticles, \
@@ -53,6 +54,9 @@ app.add_url_rule('/admin/scrap_data/<int:user_id>', view_func=ScrapData.as_view(
 app.add_url_rule('/news/<string:category>', view_func=ShowNews.as_view('show_news'))
 app.add_url_rule('/subscribe/<int:user_id>', view_func=Subscribe.as_view('subscribe'))
 app.add_url_rule('/buy_subscription/<int:user_id>', view_func=BuySubscription.as_view('buy_subscription'))
+app.add_url_rule('/journalist_articles', view_func=GetJournalistAllArticles.as_view('journalist_articles'))
+app.add_url_rule('/journalist_articles/<int:journalist_id>',
+                 view_func=GetJournalistArticles.as_view('articles_by_journalist'))
 
 if __name__ == '__main__':
     app.run(debug=True)
