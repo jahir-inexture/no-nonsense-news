@@ -1,15 +1,24 @@
+import subprocess
+import sys
+
 from flask import Blueprint, redirect, url_for, render_template, abort, request
 from flask.views import MethodView
 from flask_login import login_required, current_user
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
+from twisted.internet import reactor
+
 from news_website import db
 from news_website.admin.forms import AddCategoryForm, FilterForm
 from news_website.admin.utils import get_distinct_news_category, get_filtered_news
 from news_website.models import News, JournalistNewsMapping, NewsImageMapping, User, UserType, NewsCategory
+# from news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider import \
+#     crawl
+
 
 admin = Blueprint("admin", __name__)
 
 
-class checkArticlesPage(MethodView):
+class CheckArticlesPage(MethodView):
     """class for checking articles to approve or not for admin"""
     decorators = [login_required]
 
@@ -42,7 +51,7 @@ class checkArticlesPage(MethodView):
             abort(403)
 
 
-class approveArticle(MethodView):
+class ApproveArticle(MethodView):
     """class for approving articles for admin"""
     decorators = [login_required]
 
@@ -58,7 +67,7 @@ class approveArticle(MethodView):
             abort(403)
 
 
-class declineArticle(MethodView):
+class DeclineArticle(MethodView):
     """class for declining articles for admin"""
     decorators = [login_required]
 
@@ -74,7 +83,7 @@ class declineArticle(MethodView):
             abort(403)
 
 
-class showAllArticles(MethodView):
+class ShowAllArticles(MethodView):
     """class for showing articles that are approved"""
     decorators = [login_required]
 
@@ -103,7 +112,7 @@ class showAllArticles(MethodView):
     #     return redirect(url_for('show_all_articles', user_id=user_id))
 
 
-class showArticlesByJournalist(MethodView):
+class ShowArticlesByJournalist(MethodView):
     """class for showing articles of corresponding journalist"""
 
     def get(self, user_id, journalist_id):
@@ -131,7 +140,7 @@ class showArticlesByJournalist(MethodView):
             abort(403)
 
 
-class addCategory(MethodView):
+class AddCategory(MethodView):
     """Class for adding new news category"""
 
     def get(self, user_id):
@@ -155,7 +164,7 @@ class addCategory(MethodView):
                                distinct_news_list=get_distinct_news_category())
 
 
-class deleteCategory(MethodView):
+class DeleteCategory(MethodView):
     """Class for deleting category"""
 
     def get(self, user_id, categoryId):
@@ -166,3 +175,34 @@ class deleteCategory(MethodView):
             return redirect(url_for('add_category', user_id=current_user.id))
         else:
             abort(403)
+
+
+class ScrapData(MethodView):
+    """class for scraping data"""
+
+    def get(self, user_id):
+        if user_id == current_user.id and current_user.usertype.type == "admin":
+            print("heyyyyyyyyyyyyyyyy")
+            # from news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider import \
+            #     crawl
+            # from news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider import \
+            #     PoliticsSpider, EntertainmentSpider, SportsSpider, EducationSpider
+            # runner = CrawlerRunner()
+            # class_list = [PoliticsSpider, EntertainmentSpider, SportsSpider, EducationSpider]
+            # for class_name in class_list:
+            #     # if "twisted.internet.reactor" in sys.modules:
+            #     #     del sys.modules["twisted.internet.reactor"]
+            #     runner.crawl(class_name)
+            # runner.crawl(PoliticsSpider)
+            # d = runner.join()
+            # d.addBoth(lambda _: reactor.stop())
+            # crawl()
+            # reactor.run()
+            subprocess.check_output(['python', '-m', 'news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider'])
+            return redirect(url_for('home_page'))
+        else:
+            abort(403)
+
+    # def post(self):
+    #
+    #     return redirect(url_for('home_page'))

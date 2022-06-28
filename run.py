@@ -1,9 +1,9 @@
 from news_website import create_app, db
 from flask_migrate import Migrate
-from news_website.admin.routes import checkArticlesPage, approveArticle, declineArticle, showAllArticles, \
-    showArticlesByJournalist, addCategory, deleteCategory
+from news_website.admin.routes import CheckArticlesPage, ApproveArticle, DeclineArticle, ShowAllArticles, \
+    ShowArticlesByJournalist, AddCategory, DeleteCategory, ScrapData
 from news_website.main.routes import HomePage
-from news_website.public.routes import ShowNews
+from news_website.public.routes import ShowNews, Subscribe, BuySubscription
 from news_website.users.routes import LoginPage, RegistrationPage, ProfilePage, Logout, ResetPasswordRequest, \
     ResetToken, ChangePasswordPage
 from news_website.news.routes import PostArticlesPage, ShowJournalistArticles, UpdateArticlesPage, DeleteArticles, \
@@ -31,30 +31,28 @@ app.add_url_rule('/show_journalist_articles/<int:user_id>',
                  view_func=ShowJournalistArticles.as_view('show_journalist_article_page'))
 app.add_url_rule('/show_journalist_articles/<int:user_id>/update_article/<int:news_id>',
                  view_func=UpdateArticlesPage.as_view('update_article'))
-
 app.add_url_rule('/delete_article/<int:user_id>/<int:news_id>',
                  view_func=DeleteArticles.as_view('delete_article'))
-
 app.add_url_rule('/remove_image',
                  view_func=DeleteArticlesImage.as_view('delete_article_image'))
 
 # urls for admin
-app.add_url_rule('/admin/check_article/<int:user_id>', view_func=checkArticlesPage.as_view('check_articles'))
-app.add_url_rule('/admin/approve/<int:user_id>/<int:news_id>', view_func=approveArticle.as_view('approve_article'))
-app.add_url_rule('/admin/decline//<int:user_id>/<int:news_id>', view_func=declineArticle.as_view('decline_article'))
+app.add_url_rule('/admin/check_article/<int:user_id>', view_func=CheckArticlesPage.as_view('check_articles'))
+app.add_url_rule('/admin/approve/<int:user_id>/<int:news_id>', view_func=ApproveArticle.as_view('approve_article'))
+app.add_url_rule('/admin/decline//<int:user_id>/<int:news_id>', view_func=DeclineArticle.as_view('decline_article'))
 app.add_url_rule('/admin/show_all_articles/<int:user_id>',
-                 view_func=showAllArticles.as_view('show_all_articles'))
+                 view_func=ShowAllArticles.as_view('show_all_articles'))
 app.add_url_rule('/admin/show_articles_by_journalist/<int:user_id>/<int:journalist_id>',
-                 view_func=showArticlesByJournalist.as_view('show_articles_by_journalist'))
-app.add_url_rule('/admin/add_category/<int:user_id>', view_func=addCategory.as_view('add_category'))
+                 view_func=ShowArticlesByJournalist.as_view('show_articles_by_journalist'))
+app.add_url_rule('/admin/add_category/<int:user_id>', view_func=AddCategory.as_view('add_category'))
 app.add_url_rule('/admin/delete_category/<int:user_id>/<int:categoryId>',
-                 view_func=deleteCategory.as_view('delete_category'))
+                 view_func=DeleteCategory.as_view('delete_category'))
+app.add_url_rule('/admin/scrap_data/<int:user_id>', view_func=ScrapData.as_view('scrap_data'))
 
 # urls for public
 app.add_url_rule('/news/<string:category>', view_func=ShowNews.as_view('show_news'))
-# app.add_url_rule('/news/entertainment', view_func=ShowEntertainmentNews.as_view('show_entertainment_news'))
-# app.add_url_rule('/news/sports', view_func=ShowSportsNews.as_view('show_sports_news'))
-# app.add_url_rule('/news/education', view_func=ShowEducationNews.as_view('show_education_news'))
+app.add_url_rule('/subscribe/<int:user_id>', view_func=Subscribe.as_view('subscribe'))
+app.add_url_rule('/buy_subscription/<int:user_id>', view_func=BuySubscription.as_view('buy_subscription'))
 
 if __name__ == '__main__':
     app.run(debug=True)

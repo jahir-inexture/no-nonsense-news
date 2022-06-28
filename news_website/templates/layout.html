@@ -69,7 +69,17 @@ info
                                     class="material-icons nav-icon ">
                                category
                                </span>Add/Delete Category</a>
-
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('scrap_data',user_id=current_user.id) }}"><span
+                                    class="material-icons nav-icon ">
+                               insert_chart
+                               </span>Scrap Data</a>
+                        {% elif current_user.usertype.type == "user" %}
+                            <a class="nav-item nav-link"
+                               href="{{ url_for('subscribe',user_id=current_user.id) }}"><span
+                                    class="material-icons nav-icon">
+                                card_membership
+                                </span>Subscription</a>
                         {% endif %}
 
                         <a class="nav-item nav-link"
@@ -113,16 +123,19 @@ login
                     <div style="text-align: center">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Politics") }}">Politics</a>
+                                <a class="nav-link second-nav-link"
+                                   href="{{ url_for('show_news',category="Politics") }}">Politics</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Entertainment") }}">Entertainment</a>
+                                <a class="nav-link second-nav-link"
+                                   href="{{ url_for('show_news',category="Entertainment") }}">Entertainment</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Sports") }}">Sports</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link second-nav-link" href="{{ url_for('show_news',category="Education") }}">Education</a>
+                                <a class="nav-link second-nav-link"
+                                   href="{{ url_for('show_news',category="Education") }}">Education</a>
                             </li>
                         </ul>
                     </div>

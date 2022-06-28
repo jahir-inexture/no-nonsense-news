@@ -35,6 +35,8 @@ class User(db.Model, UserMixin):
     has_premium = db.Column(db.Boolean, default=False, nullable=False)
     user_type_id = db.Column(db.Integer, db.ForeignKey('user_type.user_type_id'))
     journalist_news = db.relationship('JournalistNewsMapping', backref='journalistnews', lazy=True)
+    premium_user = db.relationship('PremiumUserMapping', backref='premiumusermapping', cascade="all, delete-orphan",
+                                   lazy="joined")
 
     def get_reset_token(self, expires_sec=1800):
         """function to get the reset token which will expire in 30 minutes"""
@@ -104,3 +106,10 @@ class NewsImageMapping(db.Model):
     image = db.Column(db.String)
 
 
+class PremiumUserMapping(db.Model):
+    """model for premium user mapping who buys subscription"""
+
+    __tablename__ = "premium_user_mapping"
+    premium_user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    purchase_date = db.Column(db.DateTime)

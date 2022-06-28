@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h3><i>Welcome, Premium User!</i></h3>
+    <div style="border:1px solid lightgray; padding:10px; width:230px; border-radius:3px; margin-top:30px; background-color: black; color: white">
+        <p><b>Subscribed on: </b>{{ premium_user.purchase_date.date() }}</p>
+        <p><b>Days Left: </b>{{ days_left }}</p>
+    </div>
+{% endblock content %}
