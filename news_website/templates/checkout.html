@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Payment Successful!</h2>
+    <h3>Thanks for purchasing our subscription, you paid <strong>Rs. 199</strong>!</h3>
+    <a href="{{ url_for('subscribe', user_id=current_user.id) }}" class="btn btn-info"
+           role="button" style="margin-top: 20px">Back to Subscription Page</a>
+{% endblock %}

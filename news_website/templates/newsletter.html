@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1 style="color:darkblue">Newsletter</h1>
+    <hr style="height:3px; background-color: cadetblue; border:none">
+    {% for news_dict_data in news_list %}
+        <h2 style="text-align: center"><i>{{ news_dict_data[0] }}</i></h2>
+        <hr>
+            {% for news in news_dict_data[1] %}
+                <div class="news">
+                    <h4>{{ news_dict_data[1][news]['data'].news_heading }}</h4>
+                    <p>{{ news_dict_data[1][news]['data'].news_info }}</p>
+                    <img src="{{ news_dict_data[1][news]['image'] }}" alt="img">
+                    <p style="color:#6b6b6b; margin-top:1px">{{ news_dict_data[1][news]['data'].news_date }}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+    {% endfor %}
+{% endblock content %}

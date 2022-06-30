@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div>
+        <h2>Buy Subscription for Rs. 199</h2>
+        <form action="{{ url_for('checkout',user_id=current_user.id) }}" method="post">
+            <script
+                    src="https://checkout.stripe.com/checkout.js"
+                    class="stripe-button"
+                    data-key="{{ key }}"
+                    data-description="Subscription charge"
+                    data-amount="19900"
+                    data-locale="auto">
+            </script>
+        </form>
+    </div>
+{% endblock content %}

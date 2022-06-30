@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <div class="form-group">
+                <label for="category">Search by category:</label>
+                <select name="category" id="category">
+                    {% for single_category in categories %}
+                        <option value={{ single_category.category_id }}>{{ single_category.category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </fieldset>
+        <div class="form-group" style="margin-top:-25px">
+            {{ form.search(class="btn btn-outline-info") }}
+        </div>
+    </form>
+    <h2>All Articles posted by the Journalist</h2>
+    <hr>
+    {% for article in news_dict %}
+        <h3>{{ news_dict[article]['heading'] }}</h3>
+        <p>{{ news_dict[article]["content"] }}</p>
+        {% for article_img in news_dict[article]["image"] %}
+            <img class="news-images" src="{{ article_img }}" alt=" img">
+        {% endfor %}
+        <div style="color:grey; margin-top:5px;">{{ news_dict[article]["date"].strftime("%Y-%m-%d %H:%M:%S") }}
+            <p>Article by
+                <a href="{{ url_for('articles_by_journalist', journalist_id=news_dict[article]['author'].journalistnews.id) }}">{{ news_dict[article]['author'].journalistnews.first_name }} {{ news_dict[article]['author'].journalistnews.last_name }}</a>
+            </p>
+        </div>
+        <hr>
+    {% endfor %}
+    {% for page_num in raw_data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if raw_data.page == page_num %}
+                <a class="btn btn-info mb-4"
+                   href="{{ url_for('journalist_articles', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{{ url_for('journalist_articles', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

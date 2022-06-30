@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Articles posted by <i>{{ journalist_data.first_name }} {{ journalist_data.last_name }}</i></h2>
+    <hr>
+    {% for article in news_dict %}
+        <h3>{{ news_dict[article]['heading'] }}</h3>
+        <p>{{ news_dict[article]["content"] }}</p>
+        {% for article_img in news_dict[article]["image"] %}
+            <img class="news-images" src="{{ article_img }}" alt=" img">
+        {% endfor %}
+        <div style="color:grey; margin-top:5px;">{{ news_dict[article]["date"].strftime("%Y-%m-%d %H:%M:%S") }}
+
+        </div>
+        <hr>
+    {% endfor %}
+    {% for page_num in journalist_news.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if journalist_news.page == page_num %}
+                <a class="btn btn-info mb-4"
+                   href="{{ url_for('articles_by_journalist', page=page_num, journalist_id=journalist_data.id) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{{ url_for('articles_by_journalist', page=page_num, journalist_id=journalist_data.id) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

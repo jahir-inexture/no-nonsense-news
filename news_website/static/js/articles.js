@@ -44,5 +44,9 @@ function RemoveImage(index) {
 }
 
 function delete_flash(flash) {
-        $(flash).parent().remove()
-    }
+    $(flash).parent().remove()
+}
+
+window.setTimeout(function() {
+    $('#AMessage').fadeOut('slow');
+}, 3000);
