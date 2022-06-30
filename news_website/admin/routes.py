@@ -1,20 +1,11 @@
 import subprocess
-import sys
-
 from flask import Blueprint, redirect, url_for, render_template, abort, request, flash
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from scrapy.crawler import CrawlerProcess, CrawlerRunner
-from twisted.internet import reactor
-
 from news_website import db
-from news_website.admin.forms import AddCategoryForm, FilterForm
+from news_website.admin.forms import AddCategoryForm
 from news_website.admin.utils import get_distinct_news_category, get_filtered_news
-from news_website.models import News, JournalistNewsMapping, NewsImageMapping, User, UserType, NewsCategory
-
-# from news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider import \
-#     crawl
-
+from news_website.models import News, JournalistNewsMapping, NewsImageMapping, User, NewsCategory
 
 admin = Blueprint("admin", __name__)
 
@@ -90,7 +81,6 @@ class ShowAllArticles(MethodView):
 
     def get(self, user_id):
         if user_id == current_user.id and current_user.usertype.type == "admin":
-            # form = FilterForm()
             page = request.args.get('page', 1, type=int)
             news_obj = News.query.filter_by(scraped_data=False).order_by(News.news_date).paginate(page=page,
                                                                                                   per_page=5)
@@ -98,19 +88,6 @@ class ShowAllArticles(MethodView):
             return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj)
         else:
             abort(403)
-
-    # def post(self, user_id):
-    #     form = FilterForm()
-    #     page = request.args.get('page', 1, type=int)
-    #     if form.filter.data == "filter_approved":
-    #         news_obj = News.query.filter_by(is_approved=True, scraped_data=False).order_by(
-    #             News.news_date.desc()).paginate(
-    #             page=page, per_page=5)
-    #         news_data_dict = get_filtered_news(news_obj)
-    #         return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj,
-    #                                form=form)
-    #
-    #     return redirect(url_for('show_all_articles', user_id=user_id))
 
 
 class ShowArticlesByJournalist(MethodView):

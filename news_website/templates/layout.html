@@ -80,6 +80,15 @@ info
                                insert_chart
                                </span>Scrap Data</a>
                         {% elif current_user.usertype.type == "user" %}
+                            {% if current_user.has_premium %}
+                                <a class="nav-item nav-link"
+                                   href="{{ url_for('newsletter',user_id=current_user.id) }}"><span
+                                        class="material-icons nav-icon">
+                                    newspaper
+                                    </span>Newsletter</a>
+                            {% endif %}
+
+
                             <a class="nav-item nav-link"
                                href="{{ url_for('subscribe',user_id=current_user.id) }}"><span
                                     class="material-icons nav-icon">

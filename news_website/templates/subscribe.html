@@ -1,10 +1,12 @@
 {% extends 'layout.html' %}
 {% block content %}
     <h3><i>Subscribe to No Nonsense News</i></h3>
-    <div style="border:1px solid lightgray; padding:10px; width:230px; border-radius:3px; margin-top:50px;">
+    <p>-> Become a premium user, and you will get access to read newsletter.</p>
+    <div style="border:1px solid lightgray; padding:10px; width:230px; border-radius:5px; margin-top:50px; background-color: black; color: white">
+        <h5 style="color:greenyellow">Join Right Away</h5>
         <p>Buy 3 months subscription</p>
         <p><b>@199/month</b></p>
-        <a href="{{ url_for('buy_subscription', user_id=current_user.id) }}" class="btn btn-info"
+        <a href="{{ url_for('payment', user_id=current_user.id) }}" class="btn btn-info"
            role="button">Subscribe</a>
     </div>
 {% endblock content %}

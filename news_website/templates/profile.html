@@ -1,35 +1,15 @@
-{#{% extends 'layout.html' %}#}
-{#{% block content %}#}
-{#    <div> You are a {{ typeOfUser.type }}</div>#}
-{#    <div> Hi {{ current_user.first_name }} {{ current_user.last_name }} </div>#}
-{#    <div class="profile-block">#}
-{#        <h2>{{ typeOfUser.type }} details</h2>#}
-{#        <hr>#}
-{#        <p><b>Full Name#}
-{#            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.first_name }} {{ current_user.last_name }}#}
-{#        </p>#}
-{#        <p><b>Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.email }}#}
-{#        </p>#}
-{#        <p><b>Phone Number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.phone }}</p>#}
-{#        <p><b>Age &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.age }}#}
-{#        </p>#}
-{#        <p><b>Gender &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.gender }}#}
-{#        </p>#}
-{#        <p><b>Address &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> {{ current_user.address }}#}
-{#        </p>#}
-{#        <hr>#}
-{#        <form action="/home">#}
-{#            <button type="submit" class="btn btn-primary">Update Details</button>#}
-{#        </form>#}
-{#    </div>#}
-{#{% endblock content %}#}
+
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">{{ typeOfUser.type.title() }} Details</legend>
+                <legend class="border-bottom mb-4">{{ typeOfUser.type.title() }} Details
+                    {% if current_user.has_premium %}
+                    <span style="font-size: 18px;">(Premium User)</span>
+                    {% endif %}
+                </legend>
 
                 <div class="form-group">
                     {{ form.first_name.label(class="form-control-label") }}

@@ -1,23 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <form method="POST" action="" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group">
-            <div class="form-group">
-                <label for="category">Search by category:</label>
-                <select name="category" id="category">
-                    {% for single_category in categories %}
-                        <option value={{ single_category.category_id }}>{{ single_category.category }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </fieldset>
-        <div class="form-group" style="margin-top:-25px">
-            {{ form.search(class="btn btn-outline-info") }}
-        </div>
-    </form>
-    <h2>All Articles posted by the Journalist</h2>
+<h2>Articles Category: {{ category_name.category }}</h2>
     <hr>
+    {% if news_dict |length==0 %}
+        <p>No Articles Found</p>
+    {% endif %}
     {% for article in news_dict %}
         <h3>{{ news_dict[article]['heading'] }}</h3>
         <p>{{ news_dict[article]["content"] }}</p>
@@ -35,10 +22,10 @@
         {% if page_num %}
             {% if raw_data.page == page_num %}
                 <a class="btn btn-info mb-4"
-                   href="{{ url_for('journalist_articles', page=page_num) }}">{{ page_num }}</a>
+                   href="{{ url_for('filtered_articles', category_id=category_id, page=page_num) }}">{{ page_num }}</a>
             {% else %}
                 <a class="btn btn-outline-info mb-4"
-                   href="{{ url_for('journalist_articles', page=page_num) }}">{{ page_num }}</a>
+                   href="{{ url_for('filtered_articles', category_id=category_id, page=page_num) }}">{{ page_num }}</a>
             {% endif %}
         {% else %}
             ...
