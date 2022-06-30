@@ -1,6 +1,5 @@
 import os
 from datetime import date
-
 import stripe
 from flask import Blueprint, render_template, abort, flash, redirect, url_for, request, current_app
 from flask.views import MethodView
@@ -8,7 +7,8 @@ from flask_login import login_required, current_user
 from news_website import db
 from news_website.models import PremiumUserMapping, News, NewsImageMapping, JournalistNewsMapping, User, NewsCategory
 from news_website.public.forms import CategoryFilterForm
-from news_website.public.utils import get_news, get_news_by_object, get_news_for_newsletter
+from news_website.public.utils import get_news, get_news_by_object, get_news_for_newsletter, get_latest_news, \
+    get_latest_news_image
 from dateutil.relativedelta import relativedelta
 
 public = Blueprint("public", __name__)
@@ -158,6 +158,15 @@ class NewsLetter(MethodView):
 
     def get(self, user_id):
         if user_id == current_user.id:
+            carousel_dict = {"first-slide": get_latest_news("Politics"),
+                             "first-slide-image": get_latest_news_image(get_latest_news("Politics").news_id),
+                             "second-slide": get_latest_news("Entertainment"),
+                             "second-slide-image": get_latest_news_image(get_latest_news("Entertainment").news_id),
+                             "third-slide": get_latest_news("Sports"),
+                             "third-slide-image": get_latest_news_image(get_latest_news("Sports").news_id),
+                             "fourth-slide": get_latest_news("Education"),
+                             "fourth-slide-image": get_latest_news_image(get_latest_news("Education").news_id)}
+
             politics_news_dict = get_news_for_newsletter("Politics")
             entertainment_news_dict = get_news_for_newsletter("Entertainment")
             sports_news_dict = get_news_for_newsletter("Sports")
@@ -165,7 +174,7 @@ class NewsLetter(MethodView):
             news_list = [("Politics", politics_news_dict), ("Entertainment", entertainment_news_dict),
                          ("Sports", sports_news_dict), ("Education", education_news_dict)]
             category_list = ["Politics", "Entertainment", "Sports", "Education"]
-            print(news_list)
-            return render_template('newsletter.html', news_list=news_list, category_list=category_list)
+            return render_template('newsletter.html', news_list=news_list, category_list=category_list,
+                                   carousel_dict=carousel_dict)
         else:
             abort(403)

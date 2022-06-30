@@ -51,3 +51,15 @@ def get_news_for_newsletter(category_of_news):
         images_data = NewsImageMapping.query.filter_by(news_id=news.news_id).first()
         news_dict_data[news.news_id]["image"] = images_data.image
     return news_dict_data
+
+
+def get_latest_news(category_of_news):
+    news_category = NewsCategory.query.filter_by(category=category_of_news).first()
+    news_data = News.query.filter_by(news_category_id=news_category.category_id, scraped_data=True).order_by(
+        News.news_date.desc()).first()
+    return news_data
+
+
+def get_latest_news_image(newsId):
+    news_image = NewsImageMapping.query.filter_by(news_id=newsId).first()
+    return news_image
