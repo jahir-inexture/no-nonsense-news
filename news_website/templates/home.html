@@ -1,6 +1,103 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <h1>Welcome to No Nonsense News</h1>
-    <p>This site is currently under development please wait until development is completed.</p>
-    <p>Sorry for the inconvenience.🙂</p>
+
+    <h3 style="margin-top:17px"><a class="home-link" href="{{ url_for('journalist_articles') }}">Latest news From Journalist<span
+            class="material-icons home-icons">
+        navigate_next
+        </span></a></h3>
+    <hr style=" border-top: 3px solid black ">
+    {% for journalist_news in latest_journalist_news %}
+        <h4> {{ journalist_news.news_heading }}</h4>
+        <p style="color:#444; margin-bottom: 5px">{{ journalist_news.news_info }}</p>
+        <hr style="margin:5px 0 ;">
+    {% endfor %}
+
+    <h3 class="mt-50"><a class="home-link" href="{{ url_for('show_news',category="Politics") }}">Politics<span class="material-icons home-icons">
+        navigate_next
+        </span></a></h3>
+    <hr style=" border-top: 3px solid black " class="home-hr">
+    <div class="home-politics">
+        <img class="home-main-img" src="{{ politics_dict[main_politics.news_id]["image"] }}">
+        <h4 class="home-main-heading">{{ politics_dict[main_politics.news_id]["data"].news_heading }}</h4>
+        <p class="home-main-info">{{ politics_dict[main_politics.news_id]["data"].news_info }}</p>
+    </div>
+    <hr class="home-hr">
+    <div class="">
+        <div class="d-flex">
+            <img class="home-other-img" src="{{ politics_dict[other_politics[0].news_id]["image"] }}">
+            <div class="vl"></div>
+            <img class="home-other-img" src="{{ politics_dict[other_politics[1].news_id]["image"] }}"></div>
+        <div class="d-flex">
+            <h6 class="home-other-info">{{ politics_dict[other_politics[0].news_id]["data"].news_heading }}</h6>
+            <div class="vl-2"></div>
+            <h6 class="home-other-info">{{ politics_dict[other_politics[1].news_id]["data"].news_heading }}</h6>
+        </div>
+    </div>
+
+    <h3 class="mt-50"><a class="home-link" href="{{ url_for('show_news',category="Entertainment") }}">Entertainment<span class="material-icons home-icons">
+        navigate_next
+        </span></a></h3>
+    <hr style=" border-top: 3px solid black " class="home-hr">
+    <div class="home-politics">
+        <img class="home-main-img" src="{{ entertainment_dict[main_entertainment.news_id]["image"] }}">
+        <h4 class="home-main-heading">{{ entertainment_dict[main_entertainment.news_id]["data"].news_heading }}</h4>
+        <p class="home-main-info">{{ entertainment_dict[main_entertainment.news_id]["data"].news_info }}</p>
+    </div>
+    <hr class="home-hr">
+    <div class="">
+        <div class="d-flex">
+            <img class="home-other-img" src="{{ entertainment_dict[other_entertainment[0].news_id]["image"] }}">
+            <div class="vl"></div>
+            <img class="home-other-img" src="{{ entertainment_dict[other_entertainment[1].news_id]["image"] }}"></div>
+        <div class="d-flex">
+            <h6 class="home-other-info">{{ entertainment_dict[other_entertainment[0].news_id]["data"].news_heading }}</h6>
+            <div class="vl-2"></div>
+            <h6 class="home-other-info">{{ entertainment_dict[other_entertainment[1].news_id]["data"].news_heading }}</h6>
+        </div>
+    </div>
+
+    <h3 class="mt-50"><a class="home-link" href="{{ url_for('show_news',category="Sports") }}">Sports<span class="material-icons home-icons">
+        navigate_next
+        </span></a></h3>
+    <hr style=" border-top: 3px solid black " class="home-hr">
+    <div class="home-politics">
+        <img class="home-main-img" src="{{ sports_dict[main_sports.news_id]["image"] }}">
+        <h4 class="home-main-heading">{{ sports_dict[main_sports.news_id]["data"].news_heading }}</h4>
+        <p class="home-main-info">{{ sports_dict[main_sports.news_id]["data"].news_info }}</p>
+    </div>
+    <hr class="home-hr">
+    <div class="">
+        <div class="d-flex">
+            <img class="home-other-img" src="{{ sports_dict[other_sports[0].news_id]["image"] }}">
+            <div class="vl"></div>
+            <img class="home-other-img" src="{{ sports_dict[other_sports[1].news_id]["image"] }}"></div>
+        <div class="d-flex">
+            <h6 class="home-other-info">{{ sports_dict[other_sports[0].news_id]["data"].news_heading }}</h6>
+            <div class="vl-2"></div>
+            <h6 class="home-other-info">{{ sports_dict[other_sports[1].news_id]["data"].news_heading }}</h6>
+        </div>
+    </div>
+
+    <h3 class="mt-50"><a class="home-link" href="{{ url_for('show_news',category="Education") }}">Education<span class="material-icons home-icons">
+        navigate_next
+        </span></a></h3>
+    <hr style=" border-top: 3px solid black " class="home-hr">
+    <div class="home-politics">
+        <img class="home-main-img" src="{{ education_dict[main_education.news_id]["image"] }}">
+        <h4 class="home-main-heading">{{ education_dict[main_education.news_id]["data"].news_heading }}</h4>
+        <p class="home-main-info">{{ education_dict[main_education.news_id]["data"].news_info }}</p>
+    </div>
+    <hr class="home-hr">
+    <div class="">
+        <div class="d-flex">
+            <img class="home-other-img" src="{{ education_dict[other_education[0].news_id]["image"] }}">
+            <div class="vl"></div>
+            <img class="home-other-img" src="{{ education_dict[other_education[1].news_id]["image"] }}"></div>
+        <div class="d-flex">
+            <h6 class="home-other-info">{{ education_dict[other_education[0].news_id]["data"].news_heading }}</h6>
+            <div class="vl-2"></div>
+            <h6 class="home-other-info">{{ education_dict[other_education[1].news_id]["data"].news_heading }}</h6>
+        </div>
+    </div>
+
 {% endblock content %}

@@ -1,7 +1,7 @@
 import os
 from datetime import date
 import stripe
-from flask import Blueprint, render_template, abort, flash, redirect, url_for, request, current_app
+from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 from news_website import db

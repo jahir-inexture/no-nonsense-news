@@ -1,28 +1,12 @@
 {% extends 'layout.html' %}
 {% block content %}
-
-        <form method="POST" action="" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group">
-         <div class="form-group">
-                <label for="filter_data">Filter By:</label>
-                {{ form.filter_articles }}
-
-            </div>
-        </fieldset>
-        <div class="form-group" style="margin-top:-25px">
-            {{ form.search(class="btn btn-outline-info") }}
-        </div>
-        </form>
-
-    <h1>List of all articles</h1>
+    <h1>List of filtered articles</h1>
     <hr>
     {% if news_data_dict |length==0 %}
         <p>No Articles</p>
     {% endif %}
 
-
-    <div class="all_articles">
+    <div class="articles">
         {% for article in news_data_dict %}
             <div>
                 <h2>{{ news_data_dict[article]["data"].news_heading }}</h2>
@@ -50,13 +34,12 @@
         {% if page_num %}
             {% if news_obj.page == page_num %}
                 <a class="btn btn-info mb-4"
-                   href="{{ url_for('show_all_articles', page=page_num, user_id=current_user.id, news_id=news_id) }}">{{ page_num }}</a>
+                   href="{{ url_for('show_filtered_articles', page=page_num, user_id=current_user.id, filter=filter) }}">{{ page_num }}</a>
             {% else %}
                 <a class="btn btn-outline-info mb-4"
-                   href="{{ url_for('show_all_articles', page=page_num, user_id=current_user.id, news_id=news_id) }}">{{ page_num }}</a>
+                   href="{{ url_for('show_filtered_articles', page=page_num, user_id=current_user.id, filter=filter) }}">{{ page_num }}</a>
             {% endif %}
         {% else %}
             ...
         {% endif %}
-    {% endfor %}
-{% endblock content %}
+    {% endfor %}{% endblock content %}

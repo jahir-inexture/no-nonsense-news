@@ -145,6 +145,7 @@ class EducationSpider(scrapy.Spider):
         if self.page_number < 5:
             yield response.follow(next_page, callback=self.parse)
 
+
 if __name__ == "__main__":
     process = CrawlerProcess()
     class_list = [PoliticsSpider, EntertainmentSpider, SportsSpider, EducationSpider]

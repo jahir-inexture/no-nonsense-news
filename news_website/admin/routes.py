@@ -3,7 +3,7 @@ from flask import Blueprint, redirect, url_for, render_template, abort, request,
 from flask.views import MethodView
 from flask_login import login_required, current_user
 from news_website import db
-from news_website.admin.forms import AddCategoryForm
+from news_website.admin.forms import AddCategoryForm, FilterForm
 from news_website.admin.utils import get_distinct_news_category, get_filtered_news
 from news_website.models import News, JournalistNewsMapping, NewsImageMapping, User, NewsCategory
 
@@ -85,9 +85,45 @@ class ShowAllArticles(MethodView):
             news_obj = News.query.filter_by(scraped_data=False).order_by(News.news_date).paginate(page=page,
                                                                                                   per_page=5)
             news_data_dict = get_filtered_news(news_obj)
-            return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj)
+            return render_template('show_all_articles.html', news_data_dict=news_data_dict, news_obj=news_obj,
+                                   form=FilterForm())
         else:
             abort(403)
+
+    def post(self, user_id):
+        form = FilterForm()
+        return redirect(url_for('show_filtered_articles', filter=form.filter_articles.data, user_id=current_user.id))
+
+
+class ShowFilteredArticles(MethodView):
+    """class for showing filtered articles for admin"""
+    decorators = [login_required]
+
+    def get(self, user_id, filter):
+        page = request.args.get('page', 1, type=int)
+
+        if filter == "all_articles":
+            news_obj = News.query.filter_by(scraped_data=False).order_by(News.news_date).paginate(page=page,
+                                                                                                  per_page=5)
+        elif filter == "approved":
+            news_obj = News.query.filter_by(scraped_data=False, checked=True, is_approved=True).order_by(
+                News.news_date).paginate(page=page, per_page=5)
+
+        elif filter == "not_approved":
+            news_obj = News.query.filter_by(scraped_data=False, checked=True, is_approved=False).order_by(
+                News.news_date).paginate(page=page, per_page=5)
+
+        elif filter == "checked":
+            news_obj = News.query.filter_by(scraped_data=False, checked=True).order_by(
+                News.news_date).paginate(page=page, per_page=5)
+
+        elif filter == "not_checked":
+            news_obj = News.query.filter_by(scraped_data=False, checked=False).order_by(
+                News.news_date).paginate(page=page, per_page=5)
+
+        news_data_dict = get_filtered_news(news_obj)
+        return render_template('show_filtered_articles.html', news_data_dict=news_data_dict, news_obj=news_obj,
+                               filter=filter)
 
 
 class ShowArticlesByJournalist(MethodView):
