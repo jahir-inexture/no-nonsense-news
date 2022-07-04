@@ -11,12 +11,6 @@ import cloudinary.uploader
 
 news = Blueprint("news", __name__)
 
-# cloudinary.config(
-#     cloud_name="dgegns1en",
-#     api_key="211425158599682",
-#     api_secret="W2GdbxRYJvljDMrMq3k6jYPjyxM"
-# )
-
 
 class PostArticlesPage(MethodView):
     """function for posting articles by journalist"""
@@ -70,8 +64,9 @@ class ShowJournalistArticles(MethodView):
 
             journalist_news_id_list = User.query \
                 .join(JournalistNewsMapping, User.id == JournalistNewsMapping.journalist_id) \
+                .join(News, News.news_id == JournalistNewsMapping.news_id) \
                 .add_columns(JournalistNewsMapping.news_id) \
-                .filter(User.id == current_user.id).paginate(page=page, per_page=5)
+                .filter(User.id == current_user.id).order_by(News.news_date.desc()).paginate(page=page, per_page=5)
             news_dict = {}
             images_dict = {}
             for articles in journalist_news_id_list.items:
@@ -178,4 +173,3 @@ class DeleteArticlesImage(MethodView):
             return {"success": True}
         else:
             abort(403)
-
