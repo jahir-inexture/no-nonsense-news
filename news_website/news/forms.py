@@ -23,3 +23,10 @@ class UpdateArticlesForm(FlaskForm):
     picture = MultipleFileField('Upload Images')
 
     submit = SubmitField('Update')
+
+
+class UploadFileForm(FlaskForm):
+    """form for uploading files"""
+
+    picture = MultipleFileField('Upload Images')
+    submit = SubmitField('Upload')

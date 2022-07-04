@@ -132,8 +132,7 @@ class GetJournalistArticles(MethodView):
                 images_data = NewsImageMapping.query.filter_by(news_id=news_data.news_id).all()
                 news_dict[data.news_id]["image"] = []
                 for images in images_data:
-                    image_file = url_for('static', filename='news_images/' + images.image)
-                    news_dict[data.news_id]["image"].append(image_file)
+                    news_dict[data.news_id]["image"].append(images.image)
         return render_template('articles_by_journalist.html', news_dict=news_dict, journalist_news=journalist_news,
                                journalist_data=journalist_data)
 

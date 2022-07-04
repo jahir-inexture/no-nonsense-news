@@ -14,3 +14,6 @@ class Config:
     MAIL_USERNAME = os.environ.get('EMAIL_USER')
     MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
     UPLOAD_FOLDER = 'news_website/static/news_images'
+    CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+    API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+    API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')

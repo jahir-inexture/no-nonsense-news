@@ -35,8 +35,7 @@ def get_news_by_object(raw_data):
         news_dict[data.news_id]["image"] = []
         images_data = NewsImageMapping.query.filter_by(news_id=data.news_id).all()
         for images in images_data:
-            image_file = url_for('static', filename='news_images/' + images.image)
-            news_dict[data.news_id]["image"].append(image_file)
+            news_dict[data.news_id]["image"].append(images.image)
     return news_dict
 
 

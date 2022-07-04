@@ -35,8 +35,7 @@ class CheckArticlesPage(MethodView):
                 news_data_dict[data.news_id]["images"] = []
                 if news_images:
                     for one_image in news_images:
-                        image_file = url_for('static', filename='news_images/' + one_image.image)
-                        news_data_dict[data.news_id]["images"].append(image_file)
+                        news_data_dict[data.news_id]["images"].append(one_image.image)
 
             return render_template('check_articles.html', news_data_dict=news_data_dict, news_raw_data=news_raw_data)
         else:
@@ -145,8 +144,7 @@ class ShowArticlesByJournalist(MethodView):
                 news_dict[news_list.news_id] = news_list
                 images_dict[news_list.news_id] = []
                 for one_image in images_list:
-                    image_file = url_for('static', filename='news_images/' + one_image.image)
-                    images_dict[news_list.news_id].append(image_file)
+                    images_dict[news_list.news_id].append(one_image.image)
 
             return render_template('show_journalist_article.html', news_dict=news_dict, images_dict=images_dict,
                                    journalist_news_id_list=journalist_news_id_list)

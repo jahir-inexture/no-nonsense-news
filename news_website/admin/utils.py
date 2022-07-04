@@ -31,7 +31,7 @@ def get_filtered_news(news_obj):
         news_data_dict[data.news_id]["images"] = []
         if img_obj:
             for img in img_obj:
-                image_file = url_for('static', filename='news_images/' + img.image)
-                news_data_dict[data.news_id]["images"].append(image_file)
+                # image_file = url_for('static', filename='news_images/' + img.image)
+                news_data_dict[data.news_id]["images"].append(img.image)
 
     return news_data_dict
