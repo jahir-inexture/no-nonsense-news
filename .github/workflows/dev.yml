@@ -33,10 +33,10 @@ jobs:
   
   deploy:
     steps:
-      -uses: actions/checkout@v3
-      -name: Deploying to heroku
-       uses: akhileshns/heroku-deploy@v3
-       with: 
+    - uses: actions/checkout@v3
+    
+    - uses: actions/heroku-deploy@v2
+    - with: 
         heroku_api_key: $HEROKU_API_KEY
         heroku_app_name: "news-to-read"
         heroku_email: "jahir.inexture@gmail.com"
