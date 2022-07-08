@@ -65,4 +65,4 @@ app.add_url_rule('/buy_subscription/payment/<int:user_id>', view_func=Payment.as
 app.add_url_rule('/buy_subscription/checkout/<int:user_id>', view_func=Checkout.as_view('checkout'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

@@ -1,6 +1,6 @@
 name: news ci
 env:
-  HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7" 
+  HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
     strategy:
