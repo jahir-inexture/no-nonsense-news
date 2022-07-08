@@ -1,4 +1,7 @@
 name: news ci
+env:
+  HEROKU_API_KEY: a4d0bd7b-1949-4bad-ad97-209f672643b7 
+
 on:
   push:
     branches: [ "dev" ]
@@ -10,7 +13,7 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         python-version: [3.8, 3.9]
 
@@ -27,3 +30,15 @@ jobs:
     - name: Run Tests
       run: |
         coverage run -m pytest
+  
+  deploy:
+    stage: deploy
+    script:
+      - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/news-to-read.git
+      - git push heroku master
+      - echo "Deployed to Server https://news-to-read.herokuapp.com"
+    environment:
+      name: staging
+      url: https://news-to-read.herokuapp.com/
+
+  
