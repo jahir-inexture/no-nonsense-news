@@ -31,11 +31,14 @@ class TestNotRenderTemplates(TestCase):
         db.drop_all()
     
     def create_app(self):
-        app = create_app()
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
-        return app
+        pass
+
+    # def create_app(self):
+    #     app = create_app()
+    #     app.config['TESTING'] = True
+    #     app.config['WTF_CSRF_ENABLED'] = False
+    #     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
+    #     return app
 
 
     def test_db_create(self):
