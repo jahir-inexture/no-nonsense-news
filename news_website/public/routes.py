@@ -12,10 +12,16 @@ from news_website.public.utils import get_news, get_news_by_object, get_news_for
 from dateutil.relativedelta import relativedelta
 
 public = Blueprint("public", __name__)
-stripe_keys = {
-    'secret_key': os.environ['STRIPE_SECRET_KEY'],
-    'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
-}
+try:
+    stripe_keys = {
+        'secret_key': os.environ['STRIPE_SECRET_KEY'],
+        'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+    }
+except KeyError:
+    stripe_keys = {
+        'secret_key': 'sk_test_51HXxXqXxXxXxXxXxXxXxXxXxXxXxXxXxXxX',
+        'publishable_key': 'pk_test_51HXxXqXxXxXxXxXxXxXxXxXxXxXxXxXxXxX'
+    }
 
 stripe.api_key = stripe_keys['secret_key']
 
