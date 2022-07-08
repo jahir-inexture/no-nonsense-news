@@ -1,6 +1,6 @@
 name: news ci
 env:
-  HEROKU_API_KEY: a4d0bd7b-1949-4bad-ad97-209f672643b7 
+  HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7" 
 
 on:
   push:
@@ -32,13 +32,11 @@ jobs:
         coverage run -m pytest
   
   deploy:
-    stage: deploy
-    script:
-      - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/news-to-read.git
-      - git push heroku master
-      - echo "Deployed to Server https://news-to-read.herokuapp.com"
-    environment:
-      name: staging
-      url: https://news-to-read.herokuapp.com/
+    steps:
+      -uses: actions/checkout@v3
 
-  
+      -uses: akhileshns/heroku-deploy@v3
+      -with: 
+        heroku_api_key: $HEROKU_API_KEY
+        heroku_app_name: "news-to-read"
+        heroku_email: "jahir.inexture@gmail.com"
