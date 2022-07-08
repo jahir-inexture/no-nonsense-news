@@ -70,6 +70,15 @@ class Checkout(MethodView):
     def post(self, user_id):
         if current_user.id == user_id:
             amount = 199 * 100
+            card_payment = stripe.PaymentMethod.create(
+                type="card",
+                card={
+                    "number": 4242424242424242,
+                    "exp_month": 1,
+                    "exp_year": 2023,
+                    "cvc": 123,
+                },
+            )
 
             customer = stripe.Customer.create(
                 email=current_user.email,
@@ -79,6 +88,7 @@ class Checkout(MethodView):
             stripe.PaymentIntent.create(
                 customer=customer.id,
                 amount=amount,
+                payment_method=card_payment.id,
                 currency='inr',
                 description='No Nonsense News Subscription Charge'
             )

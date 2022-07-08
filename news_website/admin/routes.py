@@ -192,8 +192,8 @@ class DeleteCategory(MethodView):
 class ScrapData(MethodView):
     """class for scraping data"""
 
-    def get(self, user_id):
-        if user_id == current_user.id and current_user.usertype.type == "admin":
+    def get(self):
+        if current_user.usertype.type == "admin":
             subprocess.check_output(['python', '-m',
                                      'news_website.scraping.indianexpress_politics_scraper.indianexpress_politics_scraper.spiders.politics_spider'])
             flash('Loading Data... Please wait for 5-10 seconds.', 'info')

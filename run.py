@@ -48,7 +48,7 @@ app.add_url_rule('/admin/show_articles_by_journalist/<int:user_id>/<int:journali
 app.add_url_rule('/admin/add_category/<int:user_id>', view_func=AddCategory.as_view('add_category'))
 app.add_url_rule('/admin/delete_category/<int:user_id>/<int:categoryId>',
                  view_func=DeleteCategory.as_view('delete_category'))
-app.add_url_rule('/admin/scrap_data/<int:user_id>', view_func=ScrapData.as_view('scrap_data'))
+app.add_url_rule('/admin/scrap_data/', view_func=ScrapData.as_view('scrap_data'))
 app.add_url_rule('/admin/show_filtered_articles/<string:filter>/<int:user_id>',
                  view_func=ShowFilteredArticles.as_view('show_filtered_articles'))
 
