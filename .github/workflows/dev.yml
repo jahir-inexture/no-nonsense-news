@@ -32,6 +32,7 @@ jobs:
         coverage run -m pytest
   
   deploy:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
