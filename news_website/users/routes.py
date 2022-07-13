@@ -34,9 +34,6 @@ class LoginPage(MethodView):
 class RegistrationPage(MethodView):
     """class for getting registration page and posting the data of the user after registration"""
 
-    def get_form(self):
-        return RegistrationForm()
-
     def get(self):
         if current_user.is_authenticated:
             return redirect(url_for('home_page'))
