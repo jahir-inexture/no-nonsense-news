@@ -1,7 +1,9 @@
-# name: News: Integrate to github and deploy to heroku
 name: News: Integrate to github and docker registry
-# env:
-#   HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7"
+
+env:
+  DOCKER_LOGIN: "ocean02"
+  DOCKER_PASSWORD: "*xV8.m47j:gJRg-"
+  # HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7"
 
 on:
   push:
@@ -106,7 +108,7 @@ jobs:
         - run:
           name: Push docker image
           command: |
-            docker login -u "ocean03" -p "*xV8.m47j:gJRg-"
+            docker login -u$DOCKER_LOGIN -p$DOCKER_PASSWORD
             docker push ocean03/news_app:latest
 
   # deploy:
