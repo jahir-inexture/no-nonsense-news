@@ -1,6 +1,7 @@
-name: news ci
-env:
-  HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7"
+# name: News: Integrate to github and deploy to heroku
+name: News: Integrate to github and docker registry
+# env:
+#   HEROKU_API_KEY: "a4d0bd7b-1949-4bad-ad97-209f672643b7"
 
 on:
   push:
@@ -31,13 +32,90 @@ jobs:
   #     run: |
   #       coverage run -m pytest
   
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+  build:
+    docker:
+      - image: python:3.8
+        environment:
+          SECRET_KEY='Thisismynewswebsitesecretkey'
+          SQLALCHEMY_DATABASE_URI=postgresql://postgres:postgres@localhost/news_db
+          EMAIL_PASS=bshvqnnwyymqugju
+          EMAIL_USER=dhruv281100@gmail.com
+          STRIPE_SECRET_KEY=sk_test_51LGGWmSJkL1yEY3wqfCzB2Pnb1FcAbYNKuZIhpHK2eGWe7FehiPJYxHo8KFRy1CJzn7WNOGyDeI19X8mGmhWjE0u00H3o84byN
+          STRIPE_PUBLISHABLE_KEY=pk_test_51LGGWmSJkL1yEY3wtDSKgHqrPc5XDGsa33Y2PVjS8f01vS79N9GijHOGooddYeCTm1ibwOfCTRtYkmLMRPys25qF00gxRihz8u
+          CLOUDINARY_URL=cloudinary://211425158599682:W2GdbxRYJvljDMrMq3k6jYPjyxM@dgegns1en
+          CLOUD_NAME="dgegns1en"
+          API_KEY="211425158599682"
+          API_SECRET="W2GdbxRYJvljDMrMq3k6jYPjyxM"
+      
+      - image: postgres:12.2
+        environment:
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_DB=news_db
+
+      steps:
+        - checkout:
+
+        - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+
+        - run:
+          name: Install Dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+        
+        - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+        
+        - run:
+          name: Install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          env:
+            DOCKERIZE_VERSION: v0.3.0
+        
+        - run:
+          name: Wait for postgres to be ready
+          command: dockerize -wait tcp://postgres:5432 -timeout 60s
+        
+        - run:
+          name: Run tests
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            coverage run -m pytest
+
+        - setup_remot_docker
+
+        - run:
+          name: Install Docker client
+          command: |
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
+          
+        - run:
+          name: Build docker image
+          command: |
+            docker build -t ocean03/news_app:latest .
+
+        - run:
+          name: Push docker image
+          command: |
+            docker login -u "ocean03" -p "*xV8.m47j:gJRg-"
+            docker push ocean03/news_app:latest
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
     
-    - uses: akhileshns/heroku-deploy@v3.12.12
-      with: 
-        heroku_api_key: $HEROKU_API_KEY
-        heroku_app_name: "news-to-read"
-        heroku_email: "jahir.inexture@gmail.com"
+  #   - uses: akhileshns/heroku-deploy@v3.12.12
+  #     with: 
+  #       heroku_api_key: $HEROKU_API_KEY
+  #       heroku_app_name: "news-to-read"
+  #       heroku_email: "jahir.inexture@gmail.com"
