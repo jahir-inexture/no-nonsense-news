@@ -1,9 +1,5 @@
 name: Push to DockerHub
 
-env:
-  DOCKER_USERNAME: "ocean02"
-  DOCKER_PASSWORD: "*xV8.m47j:gJRg-"
-
 on:
   push:
     branches: [ "dev" ]
