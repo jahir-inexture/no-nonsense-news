@@ -1,4 +1,4 @@
-name: News: Integrate to github and docker registry
+name: Integrate to github and docker registry
 
 env:
   DOCKER_LOGIN: "ocean02"
