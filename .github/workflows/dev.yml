@@ -19,9 +19,9 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t ocean02/news-to-read:dev .
+          docker build -t ocean03/news-to-read:dev .
 
       - name: Push docker image to docker registry
         run: |
           docker login
-          docker push ocean02/news-to-read:dev
+          docker push ocean03/news-to-read:dev
