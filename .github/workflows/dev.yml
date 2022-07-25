@@ -1,4 +1,4 @@
-name: Integrate to github and docker registry
+name: Push to DockerHub
 
 env:
   DOCKER_USERNAME: "ocean02"
@@ -13,19 +13,18 @@ on:
 jobs:
   build:
     docker:
-      runs-on: ubuntu-latest
+      run-on: ubuntu-latest
 
       steps:
-      - uses: actions/checkout@v3
-        
-      - name: Login to docker
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        
-      - name: Build docker image
-        run: |
-          docker build -t ocean02/news-to-read:dev .
-        
-      - name: Push docker image to docker registry
-        run: |
-          docker push ocean02/news-to-read:dev
+        - uses: actions/checkout@v3        
+        - name: Login to docker
+          run: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+        - name: Build docker image
+          run: |
+            docker build -t ocean02/news-to-read:dev .
+
+        - name: Push docker image to docker registry
+          run: |
+            docker push ocean02/news-to-read:dev
